@@ -11,12 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
+     @Value("${app.security.jwt.secretKey}")
+    private String secretKey;
 
-    private static final String SECRET_KEY = "70337336763979244226452948404D635166546A576E5A7234743777217A2543";
+    @Value("${app.security.jwt.expiration}")
+    private Long jwtExpiration;
+
+    @Value("${app.security.jwt.refresh-token.expiration}")
+    private Long refreshExpiration;
+
     public String extractUsername(String token) {
         return extractClaim(token,Claims::getSubject);
     }
@@ -47,13 +55,29 @@ public class JwtService {
     public String generateToken(
             Map<String,Object> extraClaims ,UserDetails userDetails
     ){
-       return Jwts.builder()
-               .setClaims(extraClaims)
-               .setSubject(userDetails.getUsername())
-               .setIssuedAt(new Date(System.currentTimeMillis()))
-               .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 * 2))
-               .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-               .compact();
+        return buildToken(extraClaims,userDetails,jwtExpiration);
+    }
+
+
+    public String generateRefreshToken(
+          UserDetails userDetails
+    ){
+        return buildToken(new HashMap<>(), userDetails,refreshExpiration);
+    }
+
+
+
+
+    private String buildToken(
+            Map<String,Object> extraClaims ,UserDetails userDetails,long expiration
+    ){
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
     private Claims extractAllClaims(String token){
         return Jwts.parserBuilder()
@@ -64,7 +88,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte [] KeyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte [] KeyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(KeyBytes);
     }
 }

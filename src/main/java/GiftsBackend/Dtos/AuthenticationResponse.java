@@ -1,5 +1,6 @@
 package GiftsBackend.Dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,5 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AuthenticationResponse {
+    @JsonProperty("Token")
     private String token;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 }
