@@ -7,6 +7,7 @@ import GiftsBackend.Dtos.AuthenticationResponse;
 import GiftsBackend.Dtos.RegisterRequest;
 import GiftsBackend.Model.Role;
 import GiftsBackend.Model.User;
+import GiftsBackend.Model.UserProfile;
 import GiftsBackend.Repository.TokenRepo;
 import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Token.Token;
@@ -27,6 +28,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,8 +46,12 @@ public class AuthenticationService {
                 .firstname(request.getFirstName())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .birthDayDate(request.getBirthDayDate())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
+                .createdDate(LocalDateTime.now())
+                .userProfile(new UserProfile(null,"",LocalDateTime.now(),"","",null))
                 .build();
        var savedUser =  userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

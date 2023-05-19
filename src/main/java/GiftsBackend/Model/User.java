@@ -2,24 +2,26 @@ package GiftsBackend.Model;
 
 
 import GiftsBackend.Token.Token;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Getter
+@Setter
 @Table(name = "AppUsers")
 public class User implements UserDetails {
     @Id
@@ -27,16 +29,25 @@ public class User implements UserDetails {
     private Long id;
     private String firstname;
     private String lastname;
+    @Column(nullable = false,unique = true)
     private String email;
+    @Column(nullable = false,unique = true)
+    private String phoneNumber;
+    @Column(nullable = true)
+    private LocalDate birthDayDate;
+    private LocalDateTime createdDate;
     private String password;
-    private Date birthday;
-    private String elias;
+
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
+     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "userProfile_id")
+    private UserProfile userProfile;
 
 
     @Override
@@ -72,5 +83,20 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthDayDate=" + birthDayDate +
+                ", createdDate=" + createdDate +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

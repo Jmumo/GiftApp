@@ -3,7 +3,7 @@
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/GiftDB
+#    url: jdbc:mysql://localhost:3306/GiftDB?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
 #    username: root
 #    password: Johnda12#
 #  jpa:
@@ -14,7 +14,7 @@
 #      hibernate:
 #        format_sql: true
 #    database: mysql
-#    database-platform: org.hibernate.
+
 
 ##Amazon rds Connection
 
@@ -64,6 +64,10 @@ app:
       refresh-token:
         expiration: 604800000     #seven days
 
+  cloudinary:
+    API_KEY: 662877474753217
+    API_SECRET: F4lnVAARoy3IxOr-O6GyJbSNvhU
+    CLOUD_NAME: jmnmumo
 
 
 
