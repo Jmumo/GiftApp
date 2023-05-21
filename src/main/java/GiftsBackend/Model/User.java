@@ -49,6 +49,12 @@ public class User implements UserDetails {
     @JoinColumn(name = "userProfile_id")
     private UserProfile userProfile;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Event> events;
+
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
