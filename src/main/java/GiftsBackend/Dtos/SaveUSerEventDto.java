@@ -11,6 +11,6 @@ public class SaveUSerEventDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private Long productId;
-    private Long userId;
+    private String userEmail;
 
 }

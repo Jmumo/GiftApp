@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +21,13 @@ public class Event {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
-    //    @OneToMany
-    private Long productId;
+    private String imageUrl;
+    @OneToMany(mappedBy = "event")
+    private List<Product> product;
+    private String Location;
+    private String details;
+    @OneToOne
+    private EventCategory eventCategory;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

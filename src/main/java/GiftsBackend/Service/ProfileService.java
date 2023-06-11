@@ -37,7 +37,7 @@ public class ProfileService {
 
         String imageUrl = cloudinary.uploader()
                 .upload(image.getBytes(),
-                        Map.of("public_id", UUID.randomUUID().toString())).toString();
+                        Map.of("public_id", UUID.randomUUID().toString())).get("url").toString();
 
 
         updateUserProfile.setImageUrl(imageUrl);
