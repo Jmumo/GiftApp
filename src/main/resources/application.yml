@@ -37,7 +37,10 @@ spring:
     database: mysql
 
 
-#microsoftSqlServer(Azure)
+
+  servlet:
+    multipart:
+      max-request-size=10MB
 
 
 #
