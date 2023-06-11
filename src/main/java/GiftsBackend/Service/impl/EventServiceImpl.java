@@ -49,6 +49,13 @@ public class EventServiceImpl implements EventService {
 
         Optional<EventCategory> eventcategory = eventCategoryRepository.findByName(category);
 
+        Optional<Product> products = productRepository.findById(productId);
+
+        List<Product> productList = null;
+        if (products.isPresent()) {
+            productList = products.stream().toList();
+        }
+
         String imageUrl;
         try {
             imageUrl = cloudinary.uploader()
@@ -61,7 +68,7 @@ public class EventServiceImpl implements EventService {
 
         var eventToSave = Event.builder()
                 .name(name)
-                .product(new ArrayList<>())
+                .product(productList)
                 .startDate(startDate)
                 .imageUrl(imageUrl)
                 .endDate(endDate)
@@ -78,9 +85,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventCategory saveEventCategory(String name) {
+    public EventCategory saveEventCategory(MultipartFile image,String name) {
+
+        String imageUrl;
+        try {
+            imageUrl = cloudinary.uploader()
+                    .upload(image.getBytes(),
+                            Map.of("public_id", UUID.randomUUID().toString())).get("url").toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
       EventCategory eventCategory = new EventCategory();
       eventCategory.setName(name);
+      eventCategory.setImageUrl(imageUrl);
 
         return eventCategoryRepository.save(eventCategory);
     }

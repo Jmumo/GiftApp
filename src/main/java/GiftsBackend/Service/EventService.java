@@ -15,7 +15,7 @@ public interface EventService {
 
     Event addEvent(MultipartFile image, String name, LocalDate startDate, LocalDate endDate, String location, String category, String details, Long productId, String userEmail);
 
-    EventCategory saveEventCategory(String name);
+    EventCategory saveEventCategory(MultipartFile image,String name);
 
     Event addproductToEvent(ProductEventDto productEventDto);
 }

@@ -42,8 +42,11 @@ public class EventController {
 
 
     @PostMapping("/saveEventCategory")
-    public ResponseEntity<EventCategory> saveEventCategory(@RequestBody SaveEventCategoryDto saveEventCategoryDto){
-        return ResponseEntity.ok(eventService.saveEventCategory(saveEventCategoryDto.getName()));
+    public ResponseEntity<EventCategory> saveEventCategory(
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("name") String name
+    ){
+        return ResponseEntity.ok(eventService.saveEventCategory(image,name));
     }
 
     @PostMapping("/addProductToEvent")
