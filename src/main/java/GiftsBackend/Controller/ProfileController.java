@@ -20,9 +20,9 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    @PostMapping("/update")
+    @PostMapping("/update/{email}")
     public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image,
-                              @RequestParam("email") String email) throws IOException {
+                             @PathVariable String email) throws IOException {
         System.out.println("in controller");
         return ResponseEntity.ok(profileService.UpdateProfileImage(image, email));
     }
