@@ -41,6 +41,8 @@ public class ProfileService {
                 .upload(image.getBytes(),
                         Map.of("public_id", UUID.randomUUID().toString())).get("url").toString();
 
+        System.out.println("past image");
+
 
         updateUserProfile.setImageUrl(imageUrl);
         updateUserProfile.setType(image.getContentType());
