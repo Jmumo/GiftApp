@@ -3,6 +3,7 @@ package GiftsBackend.Controller;
 
 import GiftsBackend.Dtos.UpdateAboutDto;
 import GiftsBackend.Dtos.UpdateEliasDto;
+import GiftsBackend.Dtos.UpdateNamesDto;
 import GiftsBackend.Model.User;
 import GiftsBackend.Service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class ProfileController {
     public ResponseEntity<String> updateElias(@RequestBody UpdateEliasDto updateEliasDto) {
 
         return ResponseEntity.ok(profileService.UpdateProfileElias(updateEliasDto));
+    }
+
+    @PostMapping("/update/usernames")
+    public ResponseEntity<User> updateNames(@RequestBody UpdateNamesDto updateNamesDto) {
+
+        return ResponseEntity.ok(profileService.UpdateNames(updateNamesDto));
     }
 
 

@@ -3,6 +3,7 @@ package GiftsBackend.Service;
 
 import GiftsBackend.Dtos.UpdateAboutDto;
 import GiftsBackend.Dtos.UpdateEliasDto;
+import GiftsBackend.Dtos.UpdateNamesDto;
 import GiftsBackend.Model.User;
 import GiftsBackend.Model.UserProfile;
 import GiftsBackend.Repository.ProfileRepository;
@@ -61,6 +62,8 @@ public class ProfileService {
 
     }
 
+
+
     public String UpdateProfileElias(UpdateEliasDto updateEliasDto) {
 
         Optional<User> user = userRepository.findByEmail(updateEliasDto.getEmail());
@@ -85,5 +88,19 @@ public class ProfileService {
         profileRepository.save(updateUserProfile);
 
         return updateUserProfile.getAbout();
+    }
+
+    public User UpdateNames(UpdateNamesDto updateNamesDto) {
+        User user = fetchUser(updateNamesDto.getEmail());
+        user.setFirstname(updateNamesDto.getFirstname());
+        user.setLastname(updateNamesDto.getLastname());
+        return userRepository.save(user);
+
+    }
+
+
+    private User fetchUser(String email){
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.get();
     }
 }
