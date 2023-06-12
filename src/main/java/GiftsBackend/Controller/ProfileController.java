@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,9 +43,12 @@ public class ProfileController {
 
 
     @GetMapping("/getprofile/{email}")
-    public ResponseEntity<User> getUserprofile(@PathVariable String email) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Optional<User>> getUserprofile(@PathVariable String email) throws ChangeSetPersister.NotFoundException {
 
-        User user = profileService.getUserprofile(email);
+
+        System.out.println("email");
+        System.out.println(email);
+        Optional<User> user = profileService.getUserprofile(email);
 
         return ResponseEntity.ok(user);
 

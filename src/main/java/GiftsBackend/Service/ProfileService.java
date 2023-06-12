@@ -8,9 +8,7 @@ import GiftsBackend.Model.UserProfile;
 import GiftsBackend.Repository.ProfileRepository;
 import GiftsBackend.Repository.UserRepository;
 import com.cloudinary.Cloudinary;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +35,10 @@ public class ProfileService {
 
         UserProfile updateUserProfile = userProfile.get();
 
+        System.out.println(image.getOriginalFilename());
+        System.out.println(image.getContentType());
+        System.out.println(image.getSize());
+
         String imageUrl = cloudinary.uploader()
                 .upload(image.getBytes(),
                         Map.of("public_id", UUID.randomUUID().toString())).get("url").toString();
@@ -52,10 +54,10 @@ public class ProfileService {
 
     }
 
-    @Transactional
-    public User getUserprofile(String email) throws ChangeSetPersister.NotFoundException {
 
-        return userRepository.findByEmail(email).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public Optional<User> getUserprofile(String email)  {
+
+        return userRepository.findByEmail(email);
 
     }
 
