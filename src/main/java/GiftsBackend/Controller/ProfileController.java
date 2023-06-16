@@ -1,6 +1,7 @@
 package GiftsBackend.Controller;
 
 
+import GiftsBackend.Dtos.ImageResponseDto;
 import GiftsBackend.Dtos.UpdateAboutDto;
 import GiftsBackend.Dtos.UpdateEliasDto;
 import GiftsBackend.Dtos.UpdateNamesDto;
@@ -23,11 +24,13 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @PostMapping("/update/{email}")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image,
-                             @PathVariable String email) throws IOException {
-        System.out.println("in controller");
+    public ResponseEntity<ImageResponseDto> uploadImage(@RequestParam("image") MultipartFile image,
+                                                        @PathVariable String email) throws IOException {
         return ResponseEntity.ok(profileService.UpdateProfileImage(image, email));
     }
+
+
+
 
     @PostMapping("/update/Elias")
     public ResponseEntity<String> updateElias(@RequestBody UpdateEliasDto updateEliasDto) {

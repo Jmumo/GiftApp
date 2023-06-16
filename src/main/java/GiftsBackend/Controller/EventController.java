@@ -1,9 +1,9 @@
 package GiftsBackend.Controller;
 
 
+import GiftsBackend.Dtos.EventDto;
+import GiftsBackend.Dtos.ImageResponseDto;
 import GiftsBackend.Dtos.ProductEventDto;
-import GiftsBackend.Dtos.SaveEventCategoryDto;
-import GiftsBackend.Dtos.SaveUSerEventDto;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
 import GiftsBackend.Service.EventService;
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,23 +22,24 @@ import java.util.List;
 public class EventController {
     private final EventService eventService;
 
+
     @PostMapping("/save")
-    public ResponseEntity<Event> saveEvent(@RequestParam("image") MultipartFile image,
-                                           @RequestParam("name") String name,
-                                           @RequestParam("startDate") LocalDate startDate,
-                                           @RequestParam("endDate") LocalDate endDate,
-                                           @RequestParam("location") String location,
-                                           @RequestParam("category") String category,
-                                           @RequestParam("details") String details,
-                                           @RequestParam("productId") Long productId,
-                                           @RequestParam("userEmail") String userEmail
+    public ResponseEntity<EventDto> saveEvent(@RequestBody EventDto eventDto
                                            ){
-        return ResponseEntity.ok(eventService.addEvent(image,name,startDate,endDate,location,category,details,productId,userEmail));
+        System.out.println("inside controller");
+        System.out.println(eventDto.getUserEmail());
+        return ResponseEntity.ok(eventService.addEvent(eventDto));
     }
 
     @GetMapping("/user/events/{email}")
     public ResponseEntity<List<Event>> getUserEvents(@PathVariable String email){
         return ResponseEntity.ok(eventService.getUserEvents(email));
+    }
+
+    @PostMapping("/uploadimage")
+    public ResponseEntity<ImageResponseDto> uploadImage(@RequestParam("image") MultipartFile image
+                                                                 ) throws IOException {
+        return ResponseEntity.ok(eventService.UpdateProfileImage(image));
     }
 
 

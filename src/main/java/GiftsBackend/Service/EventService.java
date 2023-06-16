@@ -1,5 +1,7 @@
 package GiftsBackend.Service;
 
+import GiftsBackend.Dtos.EventDto;
+import GiftsBackend.Dtos.ImageResponseDto;
 import GiftsBackend.Dtos.ProductEventDto;
 import GiftsBackend.Dtos.SaveUSerEventDto;
 import GiftsBackend.Model.Event;
@@ -11,11 +13,13 @@ import java.util.List;
 
 public interface EventService {
 
-    public List<Event> getUserEvents(String email);
+    List<Event> getUserEvents(String email);
 
-    Event addEvent(MultipartFile image, String name, LocalDate startDate, LocalDate endDate, String location, String category, String details, Long productId, String userEmail);
+    EventDto addEvent(EventDto eventDto);
 
     EventCategory saveEventCategory(MultipartFile image,String name);
 
     Event addproductToEvent(ProductEventDto productEventDto);
+
+    ImageResponseDto UpdateProfileImage(MultipartFile image);
 }

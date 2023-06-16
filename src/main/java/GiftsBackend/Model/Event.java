@@ -26,8 +26,7 @@ public class Event {
     private List<Product> product;
     private String Location;
     private String details;
-    @OneToOne
-    private EventCategory eventCategory;
+   private String category;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

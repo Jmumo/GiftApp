@@ -1,6 +1,7 @@
 package GiftsBackend.Service;
 
 
+import GiftsBackend.Dtos.ImageResponseDto;
 import GiftsBackend.Dtos.UpdateAboutDto;
 import GiftsBackend.Dtos.UpdateEliasDto;
 import GiftsBackend.Dtos.UpdateNamesDto;
@@ -27,7 +28,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final Cloudinary cloudinary;
 
-    public String UpdateProfileImage(MultipartFile image, String email) throws IOException {
+    public ImageResponseDto UpdateProfileImage(MultipartFile image, String email) throws IOException {
         Optional<User> user = userRepository.findByEmail(email);
         System.out.println("user by email");
         Long profileId = user.get().getUserProfile().getId();
@@ -51,7 +52,9 @@ public class ProfileService {
         updateUserProfile.setType(image.getContentType());
 
         profileRepository.save(updateUserProfile);
-        return imageUrl;
+
+       return ImageResponseDto.builder().url(updateUserProfile.getImageUrl()).build();
+
 
     }
 
