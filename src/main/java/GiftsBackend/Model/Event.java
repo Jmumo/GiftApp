@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "Events")
 public class Event {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private LocalDate startDate;

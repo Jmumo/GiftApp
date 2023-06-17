@@ -43,9 +43,17 @@ public class EventServiceImpl implements EventService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        List<Event> userEvents = eventRepository.findByUserId(user.get().getId());
+        if(user.isPresent()){
+            List<Event> userEvents = eventRepository.findByUserId(user.get().getId());
 
-        return userEvents;
+            if(userEvents.isEmpty()){
+                return new ArrayList<>();
+            }
+            return userEvents;
+        }
+
+      return new ArrayList<>();
+
     }
 
     @Override
@@ -142,8 +150,6 @@ public class EventServiceImpl implements EventService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
 
         return ImageResponseDto.builder().url(imageUrl).build();
     }
