@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 @Builder
 public class OccasionsDto {
-    private Long id;
     private String name;
     private String ImageUrl;
 }
