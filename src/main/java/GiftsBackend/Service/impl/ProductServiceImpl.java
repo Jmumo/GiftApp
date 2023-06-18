@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,5 +51,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<Product> fetchProduct(Long id) {
         return productRepository.findById(id);
+    }
+
+    @Override
+    public List<Product> fetchProducts() {
+        return productRepository.findAll();
     }
 }

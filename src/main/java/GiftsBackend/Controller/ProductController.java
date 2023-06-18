@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -34,6 +35,11 @@ public class ProductController {
     @GetMapping("/fetchProduct/{id}")
     public ResponseEntity<Optional<Product>> fetchProduct(@PathVariable Long id){
         return ResponseEntity.ok(productService.fetchProduct(id));
+    }
+
+    @GetMapping("/fetchProducts")
+    public ResponseEntity<List<Product>>  fetchProducts(){
+        return ResponseEntity.ok(productService.fetchProducts());
     }
 
 }
