@@ -24,7 +24,7 @@ public class EventController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<EventDto> saveEvent(@RequestBody EventDto eventDto
+    public ResponseEntity<Event> saveEvent(@RequestBody EventDto eventDto
                                            ){
         System.out.println("inside controller");
         System.out.println(eventDto.getUserEmail());

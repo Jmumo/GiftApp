@@ -57,17 +57,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto addEvent(EventDto eventDto) {
+    public Event addEvent(EventDto eventDto) {
         System.out.println("inside image");
         Optional<User> user = userRepository.findByEmail(eventDto.getUserEmail());
 
-//        Optional<Product> products = productRepository.findById(eventDto.getProductId());
         System.out.println("inside image2");
-
-//        List<Product> productList = null;
-//        if (products.isPresent()) {
-//            productList = products.stream().toList();
-//        }
 
 
         var eventToSave = Event.builder()
@@ -82,23 +76,7 @@ public class EventServiceImpl implements EventService {
                 .category(eventDto.getCategory())
                 .build();
 
-        eventRepository.save(eventToSave);
-
-        EventDto eventDtoToReturn = EventDto.builder()
-                .name(eventDto.getName())
-                .category(eventToSave.getName())
-                .productId(eventDto.getProductId())
-                .userEmail(eventDto.getUserEmail())
-                .location(eventToSave.getLocation())
-                .details(eventToSave.getDetails())
-                .endDate(eventToSave.getEndDate())
-                .startDate(eventToSave.getStartDate())
-                .imageUrl(eventDto.getImageUrl())
-                .build();
-
-
-        return eventDtoToReturn;
-
+      return   eventRepository.save(eventToSave);
 
     }
 

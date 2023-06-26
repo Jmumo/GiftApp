@@ -16,7 +16,7 @@ public interface EventService {
 
     List<Event> getUserEvents(String email);
 
-    EventDto addEvent(EventDto eventDto);
+    Event addEvent(EventDto eventDto);
 
     EventCategory saveEventCategory(MultipartFile image,String name);
 
