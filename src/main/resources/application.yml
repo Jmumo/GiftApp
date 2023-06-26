@@ -43,6 +43,14 @@ spring:
       max-request-size=10MB
 
 
+mpesa:
+  daraja:
+    consumer-key:  hFVcbjyjAyvV1G6pMmX65gEsLPp6LdRu
+    consumer-secret: kZ67CRABLdT682QC
+    grant-type: client_credentials
+    oauth-endpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
+
+
 #
 #spring:
 #  datasource:

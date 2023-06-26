@@ -22,4 +22,6 @@ public interface EventService {
     Event addproductToEvent(ProductEventDto productEventDto);
 
     ImageResponseDto UpdateProfileImage(MultipartFile image);
+
+    Event addproductToEvent(Long eventId, Long productId);
 }

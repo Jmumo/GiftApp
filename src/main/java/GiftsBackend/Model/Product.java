@@ -1,11 +1,14 @@
 package GiftsBackend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -22,7 +25,8 @@ public class Product {
     private LocalDate createdDate;
     @Convert(converter = Converter.class)
     private Map<String, String> attributes;
-    @ManyToOne
-    private Event event;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "products")
+    private Set<Event> event = new HashSet<>();
 
 }

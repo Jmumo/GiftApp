@@ -51,9 +51,13 @@ public class EventController {
         return ResponseEntity.ok(eventService.saveEventCategory(image,name));
     }
 
-    @PostMapping("/addProductToEvent")
-    public ResponseEntity<Event> addProductToEvent(ProductEventDto productEventDto){
-         return ResponseEntity.ok(eventService.addproductToEvent(productEventDto));
+    @PutMapping("/{eventId}/event/{productId}/product")
+
+    public ResponseEntity<Event>addProductToEvent(
+            @PathVariable Long eventId,
+            @PathVariable Long productId
+    ){
+        return ResponseEntity.ok(eventService.addproductToEvent(eventId,productId));
     }
 
 

@@ -72,7 +72,7 @@ public class EventServiceImpl implements EventService {
 
         var eventToSave = Event.builder()
                 .name(eventDto.getName())
-                .product(new ArrayList<>())
+                .products(new HashSet<>())
                 .startDate(eventDto.getStartDate())
                 .imageUrl(eventDto.getImageUrl())
                 .endDate(eventDto.getEndDate())
@@ -131,7 +131,7 @@ public class EventServiceImpl implements EventService {
 
             Event UpdatedEvent = event.get();
 
-            UpdatedEvent.getProduct().add(UpdatedProduct);
+//            UpdatedEvent.getProduct().add(UpdatedProduct);
 
             return eventRepository.save(UpdatedEvent);
         }
@@ -152,5 +152,19 @@ public class EventServiceImpl implements EventService {
         }
 
         return ImageResponseDto.builder().url(imageUrl).build();
+    }
+
+    @Override
+    public Event addproductToEvent(Long eventId, Long productId) {
+
+        Product product = productRepository.findById(productId).get();
+
+        Event event = eventRepository.findById(eventId).get();
+
+        if(product != null && event !=null){
+            event.getProducts().add(product);
+            return eventRepository.save(event);
+        }
+        return null;
     }
 }

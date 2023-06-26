@@ -2,6 +2,7 @@ package GiftsBackend.Config;
 
 
 import GiftsBackend.Repository.UserRepository;
+import com.squareup.okhttp.OkHttpClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +45,12 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
 
     }
+
+    @Bean
+    public OkHttpClient getOkHttpClient() {
+        return new OkHttpClient();
+    }
+
 
 
 }
