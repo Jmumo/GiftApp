@@ -52,7 +52,6 @@ public class EventController {
     }
 
     @PutMapping("/{eventId}/event/{productId}/product")
-
     public ResponseEntity<Event>addProductToEvent(
             @PathVariable Long eventId,
             @PathVariable Long productId
@@ -61,6 +60,8 @@ public class EventController {
     }
 
 
-
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Event> getEventById(@PathVariable Long id) {
+        return ResponseEntity.ok(eventService.getEvent(id));
+    }
 }

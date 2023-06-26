@@ -167,4 +167,9 @@ public class EventServiceImpl implements EventService {
         }
         return null;
     }
+
+    @Override
+    public Event getEvent(Long id) {
+        return eventRepository.findById(id).get();
+    }
 }

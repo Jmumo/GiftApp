@@ -6,6 +6,7 @@ import GiftsBackend.Dtos.ProductEventDto;
 import GiftsBackend.Dtos.SaveUSerEventDto;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -24,4 +25,6 @@ public interface EventService {
     ImageResponseDto UpdateProfileImage(MultipartFile image);
 
     Event addproductToEvent(Long eventId, Long productId);
+
+    Event getEvent(Long id);
 }
