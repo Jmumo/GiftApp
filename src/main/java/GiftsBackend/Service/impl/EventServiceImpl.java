@@ -17,6 +17,7 @@ import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,6 +75,10 @@ public class EventServiceImpl implements EventService {
                 .details(eventDto.getDetails())
                 .Location(eventDto.getLocation())
                 .category(eventDto.getCategory())
+                .startTime(eventDto.getStartTime())
+                .endTime(eventDto.getEndTime())
+                .color(eventDto.getColor())
+                .cost(eventDto.getCost())
                 .build();
 
       return   eventRepository.save(eventToSave);
@@ -141,6 +146,7 @@ public class EventServiceImpl implements EventService {
 
         if(product != null && event !=null){
             event.getProducts().add(product);
+            event.setCost(event.getCost().add(product.getPrice()));
             return eventRepository.save(event);
         }
         return null;

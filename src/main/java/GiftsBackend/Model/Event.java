@@ -4,7 +4,9 @@ package GiftsBackend.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,9 @@ public class Event {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String color;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private String imageUrl;
     @ManyToMany
     @JoinTable(name = "Events_Products",
@@ -45,5 +50,6 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    private BigDecimal cost;
 
 }

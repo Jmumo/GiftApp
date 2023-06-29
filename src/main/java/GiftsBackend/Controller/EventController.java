@@ -25,20 +25,20 @@ public class EventController {
 
     @PostMapping("/save")
     public ResponseEntity<Event> saveEvent(@RequestBody EventDto eventDto
-                                           ){
+    ) {
         System.out.println("inside controller");
         System.out.println(eventDto.getUserEmail());
         return ResponseEntity.ok(eventService.addEvent(eventDto));
     }
 
     @GetMapping("/user/events/{email}")
-    public ResponseEntity<List<Event>> getUserEvents(@PathVariable String email){
+    public ResponseEntity<List<Event>> getUserEvents(@PathVariable String email) {
         return ResponseEntity.ok(eventService.getUserEvents(email));
     }
 
     @PostMapping("/uploadimage")
     public ResponseEntity<ImageResponseDto> uploadImage(@RequestParam("image") MultipartFile image
-                                                                 ) throws IOException {
+    ) throws IOException {
         return ResponseEntity.ok(eventService.UpdateProfileImage(image));
     }
 
@@ -47,16 +47,16 @@ public class EventController {
     public ResponseEntity<EventCategory> saveEventCategory(
             @RequestParam("image") MultipartFile image,
             @RequestParam("name") String name
-    ){
-        return ResponseEntity.ok(eventService.saveEventCategory(image,name));
+    ) {
+        return ResponseEntity.ok(eventService.saveEventCategory(image, name));
     }
 
     @PutMapping("/{eventId}/event/{productId}/product")
-    public ResponseEntity<Event>addProductToEvent(
+    public ResponseEntity<Event> addProductToEvent(
             @PathVariable Long eventId,
             @PathVariable Long productId
-    ){
-        return ResponseEntity.ok(eventService.addproductToEvent(eventId,productId));
+    ) {
+        return ResponseEntity.ok(eventService.addproductToEvent(eventId, productId));
     }
 
 
