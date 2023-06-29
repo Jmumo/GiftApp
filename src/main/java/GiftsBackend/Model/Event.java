@@ -9,16 +9,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Getter
 @Setter
-@Table(name = "Events")
+@Table(name = "Tbl_Events")
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+            name = "Event_Sequence",
+            sequenceName = "Event_Sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "Event_Sequence"
+    )
     private Long id;
     private String name;
     private LocalDate startDate;

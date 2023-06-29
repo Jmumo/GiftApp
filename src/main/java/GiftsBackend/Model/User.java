@@ -37,8 +37,6 @@ public class User implements UserDetails {
     private LocalDate birthDayDate;
     private LocalDateTime createdDate;
     private String password;
-
-
     @Enumerated(EnumType.STRING)
     private Role role;
      @JsonIgnore
