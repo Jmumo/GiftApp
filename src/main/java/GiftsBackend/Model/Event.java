@@ -51,5 +51,7 @@ public class Event {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     private BigDecimal cost;
+    @Enumerated(EnumType.STRING)
+    private EventStatus eventStatus;
 
 }

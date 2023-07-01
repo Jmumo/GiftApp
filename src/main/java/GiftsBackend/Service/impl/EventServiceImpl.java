@@ -1,13 +1,10 @@
 package GiftsBackend.Service.impl;
 
+import GiftsBackend.Dtos.ConfirmEventDto;
 import GiftsBackend.Dtos.EventDto;
 import GiftsBackend.Dtos.ImageResponseDto;
 import GiftsBackend.Dtos.ProductEventDto;
-import GiftsBackend.Dtos.SaveUSerEventDto;
-import GiftsBackend.Model.Event;
-import GiftsBackend.Model.EventCategory;
-import GiftsBackend.Model.Product;
-import GiftsBackend.Model.User;
+import GiftsBackend.Model.*;
 import GiftsBackend.Repository.EventCategoryRepository;
 import GiftsBackend.Repository.EventRepository;
 import GiftsBackend.Repository.ProductRepository;
@@ -15,17 +12,16 @@ import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.EventService;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.DataOutput;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -78,6 +74,7 @@ public class EventServiceImpl implements EventService {
                 .endTime(eventDto.getEndTime())
                 .color(eventDto.getColor())
                 .cost(eventDto.getCost())
+                .eventStatus(EventStatus.UNCONFIRMED)
                 .build();
 
       return   eventRepository.save(eventToSave);
@@ -155,5 +152,38 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event getEvent(Long id) {
         return eventRepository.findById(id).get();
+    }
+
+    @Override
+    public Event confirm(ConfirmEventDto confirmEventDto) {
+
+        Event fetchedEvent = eventRepository.findById(confirmEventDto.getEventId()).get();
+        log.error("fetched event {}",fetchedEvent.getName());
+
+        Product product = productRepository.findById(confirmEventDto.getProductId()).get();
+        log.error("fetched product {}",product);
+
+        User user = userRepository.findByEmail(confirmEventDto.getUserEmail()).get();
+        log.error("fetched user {}",user);
+
+
+        Set<Product> products = new HashSet<>();
+        products.add(product);
+        fetchedEvent.setProducts(products);
+        fetchedEvent.setCost(product.getPrice() );
+        fetchedEvent.setCategory(confirmEventDto.getCategory());
+        fetchedEvent.setName(confirmEventDto.getName());
+        fetchedEvent.setStartDate(confirmEventDto.getStartDate());
+        fetchedEvent.setEndDate(confirmEventDto.getEndDate());
+        fetchedEvent.setStartTime(confirmEventDto.getStartTime());
+        fetchedEvent.setEndTime(confirmEventDto.getEndTime());
+        fetchedEvent.setLocation(confirmEventDto.getLocation());
+        fetchedEvent.setDetails(confirmEventDto.getDetails());
+        fetchedEvent.setUser(user);
+        fetchedEvent.setImageUrl(confirmEventDto.getImageUrl());
+        fetchedEvent.setColor(confirmEventDto.getColor());
+        fetchedEvent.setEventStatus(EventStatus.CONFIRMED);
+
+        return eventRepository.save(fetchedEvent);
     }
 }

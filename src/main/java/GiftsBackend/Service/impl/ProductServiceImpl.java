@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
                 .attributes(productDto.getAttributes())
                 .Price(productDto.getPrice())
                 .Name(productDto.getName())
+                .Description(productDto.getDescription())
                 .createdDate(LocalDate.now())
                 .ImageUrl(imageUrl)
                 .build();

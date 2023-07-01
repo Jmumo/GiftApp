@@ -24,6 +24,7 @@ public class Product {
     private BigDecimal Price;
     private String ImageUrl;
     private LocalDate createdDate;
+    private String Description;
     @Convert(converter = Converter.class)
     private Map<String, String> attributes;
     @JsonIgnore

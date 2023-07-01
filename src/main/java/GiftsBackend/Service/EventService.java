@@ -1,9 +1,6 @@
 package GiftsBackend.Service;
 
-import GiftsBackend.Dtos.EventDto;
-import GiftsBackend.Dtos.ImageResponseDto;
-import GiftsBackend.Dtos.ProductEventDto;
-import GiftsBackend.Dtos.SaveUSerEventDto;
+import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
 import org.springframework.http.ResponseEntity;
@@ -27,4 +24,6 @@ public interface EventService {
     Event addproductToEvent(Long eventId, Long productId);
 
     Event getEvent(Long id);
+
+    Event confirm(ConfirmEventDto confirmEventDto);
 }
