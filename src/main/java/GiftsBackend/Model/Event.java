@@ -53,5 +53,7 @@ public class Event {
     private BigDecimal cost;
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;
+    private BigDecimal contributedAmount;
+    private String paymentRef;
 
 }

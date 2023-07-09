@@ -49,7 +49,13 @@ mpesa:
     consumer-key:  hFVcbjyjAyvV1G6pMmX65gEsLPp6LdRu
     consumer-secret: kZ67CRABLdT682QC
     grant-type: client_credentials
-    oauth-endpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
+    oauth-endpoint: https://sandbox.safaricom.co.ke/oauth/v2/generate
+    registerUrlEndpoint: https://sandbox.safaricom.co.ke/mpesa/c2b/v2/registerurl
+    simulate-transaction-endpoint: https://sandbox.safaricom.co.ke/mpesa/c2b/v2/simulate
+    shortCode: 174379
+    confirmation-url: https://1e39-105-163-157-96.ngrok-free.app/mobile-money/confirmation
+    validation-url: https://1e39-105-163-157-96.ngrok-free.app/mobile-money/validation
+    responseType: Completed
 
 
 #

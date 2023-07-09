@@ -1,6 +1,7 @@
 package GiftsBackend.Config;
 
 
+import GiftsBackend.Dtos.AcknowledgeResponse;
 import GiftsBackend.Repository.UserRepository;
 import com.squareup.okhttp.OkHttpClient;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,13 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
 
+    }
+
+    @Bean
+    public AcknowledgeResponse getAcknowledgeResponse() {
+        AcknowledgeResponse acknowledgeResponse = new AcknowledgeResponse();
+//        acknowledgeResponse.setMessage("Success");
+        return acknowledgeResponse;
     }
 
     @Bean

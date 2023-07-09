@@ -10,6 +10,7 @@ import GiftsBackend.Repository.EventRepository;
 import GiftsBackend.Repository.ProductRepository;
 import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.EventService;
+import GiftsBackend.Utils.HelperUtility;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -166,6 +168,8 @@ public class EventServiceImpl implements EventService {
         User user = userRepository.findByEmail(confirmEventDto.getUserEmail()).get();
         log.error("fetched user {}",user);
 
+        String PayMentRef = HelperUtility.GeneratePaymentRef();
+
 
         Set<Product> products = new HashSet<>();
         products.add(product);
@@ -183,6 +187,8 @@ public class EventServiceImpl implements EventService {
         fetchedEvent.setImageUrl(confirmEventDto.getImageUrl());
         fetchedEvent.setColor(confirmEventDto.getColor());
         fetchedEvent.setEventStatus(EventStatus.CONFIRMED);
+        fetchedEvent.setPaymentRef(PayMentRef);
+        fetchedEvent.setContributedAmount(BigDecimal.ZERO);
 
         return eventRepository.save(fetchedEvent);
     }

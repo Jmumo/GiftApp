@@ -1,13 +1,11 @@
 package GiftsBackend.Controller;
 
 
-import GiftsBackend.Dtos.AccessTokenResponse;
+import GiftsBackend.Dtos.*;
 import GiftsBackend.Service.DarajaApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
@@ -16,11 +14,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class MpesaController {
 
     private final DarajaApi darajaApi;
+    private final AcknowledgeResponse acknowledgeResponse;
     @GetMapping(path = "/token", produces = "application/json")
     public ResponseEntity<AccessTokenResponse> getAccessToken() {
-
-        System.out.println("in the controller");
         return ResponseEntity.ok(darajaApi.getAccessToken());
+    }
+
+    @PostMapping(path = "/register-url", produces = "application/json")
+    public ResponseEntity<RegisterUrlResponse> registerUrl() {
+        return ResponseEntity.ok(darajaApi.registerUrl());
+    }
+
+    @PostMapping(path = "/validation", produces = "application/json")
+    public ResponseEntity<AcknowledgeResponse> mpesaValidation(@RequestBody MpesaValidationResponse mpesaValidationResponse) {
+        darajaApi.savePayBillResponse(mpesaValidationResponse);
+        return ResponseEntity.ok(acknowledgeResponse);
+    }
+
+    @PostMapping(path = "/simulate-c2b", produces = "application/json")
+    public ResponseEntity<SimulateTransactionResponse> simulateB2CTransaction(@RequestBody SimulateTransactionRequest simulateTransactionRequest) {
+        return ResponseEntity.ok(darajaApi.simulateC2BTransaction(simulateTransactionRequest));
     }
 
 }
