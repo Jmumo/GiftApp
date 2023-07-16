@@ -3,7 +3,9 @@ package GiftsBackend.Service.impl;
 import GiftsBackend.Config.MpesaConfiguration;
 import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
+import GiftsBackend.Model.MpesaPayBillResponse;
 import GiftsBackend.Repository.EventRepository;
+import GiftsBackend.Repository.MpesaPayBillResponseRepo;
 import GiftsBackend.Service.DarajaApi;
 import GiftsBackend.Utils.HelperUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +33,9 @@ public class DarajaApiImpl implements DarajaApi {
     private final OkHttpClient okHttpClient;
     private final ObjectMapper objectMapper;
     private final EventRepository eventRepository;
+    private final MpesaPayBillResponseRepo mpesaPayBillResponseRepo;
+
+
     @Override
     public AccessTokenResponse getAccessToken() {
         // get the Base64 rep of consumerKey + ":" + consumerSecret
@@ -124,10 +129,32 @@ public class DarajaApiImpl implements DarajaApi {
     public AcknowledgeResponse savePayBillResponse(MpesaValidationResponse mpesaValidationResponse) {
 
         Optional<Event> event = Optional.ofNullable(eventRepository.findByPaymentRef(mpesaValidationResponse.getBillRefNumber()));
+
+
         if(event.isPresent()){
             Event eventToSave = event.get();
-            eventToSave.getContributedAmount().add(BigDecimal.valueOf(Long.parseLong(mpesaValidationResponse.getTransAmount())));
 
+//save Paybill Response
+            MpesaPayBillResponse mpesaPayBillResponse = MpesaPayBillResponse.builder()
+                    .billRefNumber(mpesaValidationResponse.getBillRefNumber())
+                    .businessShortCode(mpesaValidationResponse.getBusinessShortCode())
+                    .transTime(mpesaValidationResponse.getTransTime())
+                    .transID(mpesaValidationResponse.getTransID())
+                    .transactionType(mpesaValidationResponse.getTransactionType())
+                    .transAmount(mpesaValidationResponse.getTransAmount())
+                    .invoiceNumber(mpesaValidationResponse.getInvoiceNumber())
+                    .orgAccountBalance(mpesaValidationResponse.getOrgAccountBalance())
+                    .thirdPartyTransID(mpesaValidationResponse.getThirdPartyTransID())
+                    .msisdn(mpesaValidationResponse.getMSISDN())
+                    .lastName(mpesaValidationResponse.getLastName())
+                    .firstName(mpesaValidationResponse.getFirstName())
+                    .middleName(mpesaValidationResponse.getMiddleName())
+                    .event(eventToSave)
+                    .build();
+
+            mpesaPayBillResponseRepo.save(mpesaPayBillResponse);
+
+            eventToSave.getPayments().add(mpesaPayBillResponse);
             eventRepository.save(eventToSave);
             AcknowledgeResponse acknowledgeResponse = new AcknowledgeResponse();
             acknowledgeResponse.setResultCode("00");
@@ -139,6 +166,55 @@ public class DarajaApiImpl implements DarajaApi {
         acknowledgeResponse.setResultCode("C2B00011");
         acknowledgeResponse.setResultDescription("Rejected");
         return acknowledgeResponse;
+    }
+
+
+    @Override
+    public StkPushSyncResponse performStkPushTransaction(InternalStkPushRequest internalStkPushRequest) {
+
+        Event event  = eventRepository.findById(internalStkPushRequest.getEventId()).get();
+
+        ExternalStkPushRequest externalStkPushRequest = new ExternalStkPushRequest();
+        externalStkPushRequest.setBusinessShortCode(mpesaConfiguration.getStkPushShortCode());
+
+        String transactionTimestamp = HelperUtility.getTransactionTimestamp();
+        String stkPushPassword = HelperUtility.getStkPushPassword(mpesaConfiguration.getStkPushShortCode(),
+                mpesaConfiguration.getStkPassKey(), transactionTimestamp);
+        externalStkPushRequest.setPassword(stkPushPassword);
+        externalStkPushRequest.setTimestamp(transactionTimestamp);
+        externalStkPushRequest.setTransactionType(CUSTOMER_PAYBILL_ONLINE);
+        externalStkPushRequest.setAmount(internalStkPushRequest.getAmount());
+        externalStkPushRequest.setPartyA(internalStkPushRequest.getPhoneNumber());
+        externalStkPushRequest.setPartyB(mpesaConfiguration.getStkPushShortCode());
+        externalStkPushRequest.setPhoneNumber(internalStkPushRequest.getPhoneNumber());
+        externalStkPushRequest.setCallBackURL(mpesaConfiguration.getStkPushRequestCallbackUrl());
+        externalStkPushRequest.setAccountReference(event.getPaymentRef());
+        externalStkPushRequest.setTransactionDesc(String.format("%s Transaction", internalStkPushRequest.getPhoneNumber()));
+
+        AccessTokenResponse accessTokenResponse = getAccessToken();
+
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
+                Objects.requireNonNull(HelperUtility.toJson(externalStkPushRequest)));
+
+
+        Request request = new Request.Builder()
+                .url(mpesaConfiguration.getStkPushRequestUrl())
+                .post(body)
+                .addHeader(AUTHORIZATION_HEADER_STRING, String.format("%s %s", BEARER_AUTH_STRING, accessTokenResponse.getAccessToken()))
+                .build();
+
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            assert response.body() != null;
+            // use Jackson to Decode the ResponseBody ...
+          //  System.out.println(response.body().string());
+            return objectMapper.readValue(response.body().string(), StkPushSyncResponse.class);
+
+        } catch (IOException e) {
+            log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));
+            return null;
+        }
+
     }
 
 }

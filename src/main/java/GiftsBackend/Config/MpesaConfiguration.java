@@ -20,6 +20,10 @@ public class MpesaConfiguration {
     private String confirmationUrL;
     private String validationUrL;
     private String responseType;
+    private String stkPushShortCode;
+    private String stkPassKey;
+    private String stkPushRequestUrl;
+    private String stkPushRequestCallbackUrl;
 
     @Override
     public String toString() {

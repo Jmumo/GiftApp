@@ -3,10 +3,8 @@ package GiftsBackend.Service;
 import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface EventService {
@@ -26,4 +24,6 @@ public interface EventService {
     Event getEvent(Long id);
 
     Event confirm(ConfirmEventDto confirmEventDto);
+
+    Event contributeToEvent(ContributeEventDto contributeEventDto);
 }

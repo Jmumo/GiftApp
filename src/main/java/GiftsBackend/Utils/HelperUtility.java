@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Random;
 
 
@@ -46,4 +48,16 @@ public class HelperUtility {
 
         return randomString.toString();
     }
+
+    public static String getStkPushPassword(String shortCode, String passKey, String timestamp) {
+        String concatenatedString = String.format("%s%s%s", shortCode, passKey, timestamp);
+        return toBase64String(concatenatedString);
+    }
+
+    public static String getTransactionTimestamp() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        return dateFormat.format(new Date());
+    }
+
+
 }

@@ -1,10 +1,7 @@
 package GiftsBackend.Controller;
 
 
-import GiftsBackend.Dtos.ConfirmEventDto;
-import GiftsBackend.Dtos.EventDto;
-import GiftsBackend.Dtos.ImageResponseDto;
-import GiftsBackend.Dtos.ProductEventDto;
+import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
 import GiftsBackend.Service.EventService;
@@ -27,8 +24,7 @@ public class EventController {
     @PostMapping("/save")
     public ResponseEntity<Event> saveEvent(@RequestBody EventDto eventDto
     ) {
-//        System.out.println("inside controller");
-//        System.out.println(eventDto.getUserEmail());
+        System.out.println("hello");
         return ResponseEntity.ok(eventService.addEvent(eventDto));
     }
 
@@ -70,5 +66,10 @@ public class EventController {
     @PutMapping("/confirm")
     public ResponseEntity<Event> confirmEvent(@RequestBody ConfirmEventDto confirmEventDto){
         return ResponseEntity.ok(eventService.confirm(confirmEventDto));
+    }
+
+    @PutMapping
+    public ResponseEntity<Event> contributeToEvent(@RequestBody ContributeEventDto contributeEventDto){
+        return ResponseEntity.ok(eventService.contributeToEvent(contributeEventDto));
     }
 }

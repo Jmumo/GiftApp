@@ -27,7 +27,13 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/register","/api/v1/auth/authenticate","/api/v1/profile/update/{email}")
+                .requestMatchers("/api/v1/auth/register",
+                        "/api/v1/auth/authenticate",
+                        "/api/v1/profile/update/{email}",
+                        "/mobile-money/validation",
+                        "/mobile-money/confirmation",
+                        "/mobile-money/stk-transaction-result")
+
                 .permitAll()
                 .anyRequest()
                 .authenticated()

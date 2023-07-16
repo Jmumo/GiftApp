@@ -2,8 +2,7 @@ package GiftsBackend.Model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -11,6 +10,9 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Entity
 @Table(name = "mpesa_payment_response")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MpesaPayBillResponse {
     @Id
     @SequenceGenerator(
@@ -63,5 +65,9 @@ public class MpesaPayBillResponse {
 
     @JsonProperty("LastName")
     private String lastName;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
 
 }

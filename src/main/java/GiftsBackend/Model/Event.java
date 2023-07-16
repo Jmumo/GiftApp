@@ -54,6 +54,8 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;
     private BigDecimal contributedAmount;
+    @Column(unique = true)
     private String paymentRef;
-
+    @OneToMany(mappedBy = "event")
+    private Set<MpesaPayBillResponse> payments;
 }

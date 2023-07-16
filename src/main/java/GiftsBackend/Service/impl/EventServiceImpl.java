@@ -1,9 +1,6 @@
 package GiftsBackend.Service.impl;
 
-import GiftsBackend.Dtos.ConfirmEventDto;
-import GiftsBackend.Dtos.EventDto;
-import GiftsBackend.Dtos.ImageResponseDto;
-import GiftsBackend.Dtos.ProductEventDto;
+import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.*;
 import GiftsBackend.Repository.EventCategoryRepository;
 import GiftsBackend.Repository.EventRepository;
@@ -77,6 +74,8 @@ public class EventServiceImpl implements EventService {
                 .color(eventDto.getColor())
                 .cost(eventDto.getCost())
                 .eventStatus(EventStatus.UNCONFIRMED)
+                .contributedAmount(BigDecimal.ZERO)
+                .payments(new HashSet<>())
                 .build();
 
       return   eventRepository.save(eventToSave);
@@ -192,4 +191,14 @@ public class EventServiceImpl implements EventService {
 
         return eventRepository.save(fetchedEvent);
     }
+
+    @Override
+    public Event contributeToEvent(ContributeEventDto contributeEventDto) {
+        Event fetchedEvent = eventRepository.findById(contributeEventDto.getEventID()).get();
+        log.error("fetched event {}",fetchedEvent.getName());
+
+        return null;
+    }
+
+
 }

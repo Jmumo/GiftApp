@@ -11,4 +11,6 @@ public interface DarajaApi {
 
 
     AcknowledgeResponse savePayBillResponse(MpesaValidationResponse mpesaValidationResponse);
+
+    StkPushSyncResponse performStkPushTransaction(InternalStkPushRequest internalStkPushRequest);
 }
