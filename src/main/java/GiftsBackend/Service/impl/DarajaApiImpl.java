@@ -4,8 +4,10 @@ import GiftsBackend.Config.MpesaConfiguration;
 import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.MpesaPayBillResponse;
+import GiftsBackend.Model.Payments;
 import GiftsBackend.Repository.EventRepository;
 import GiftsBackend.Repository.MpesaPayBillResponseRepo;
+import GiftsBackend.Repository.PaymentsRepository;
 import GiftsBackend.Service.DarajaApi;
 import GiftsBackend.Utils.HelperUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +36,7 @@ public class DarajaApiImpl implements DarajaApi {
     private final ObjectMapper objectMapper;
     private final EventRepository eventRepository;
     private final MpesaPayBillResponseRepo mpesaPayBillResponseRepo;
+    private final PaymentsRepository paymentsRepository;
 
 
     @Override
@@ -154,7 +157,7 @@ public class DarajaApiImpl implements DarajaApi {
 
             mpesaPayBillResponseRepo.save(mpesaPayBillResponse);
 
-            eventToSave.getPayments().add(mpesaPayBillResponse);
+            eventToSave.getPayBillResponses().add(mpesaPayBillResponse);
             eventRepository.save(eventToSave);
             AcknowledgeResponse acknowledgeResponse = new AcknowledgeResponse();
             acknowledgeResponse.setResultCode("00");
@@ -206,14 +209,53 @@ public class DarajaApiImpl implements DarajaApi {
         try {
             Response response = okHttpClient.newCall(request).execute();
             assert response.body() != null;
-            // use Jackson to Decode the ResponseBody ...
-          //  System.out.println(response.body().string());
-            return objectMapper.readValue(response.body().string(), StkPushSyncResponse.class);
+           StkPushSyncResponse stkPushSyncResponse = objectMapper.readValue(response.body().string(), StkPushSyncResponse.class);
+            System.out.println(stkPushSyncResponse.getResponseDescription());
+
+            Payments payments = new Payments();
+            payments.setMerchantRequestID(stkPushSyncResponse.getMerchantRequestID());
+            payments.setResponseCode(stkPushSyncResponse.getResponseCode());
+            payments.setCustomerMessage(stkPushSyncResponse.getCustomerMessage());
+            payments.setCheckoutRequestID(stkPushSyncResponse.getCheckoutRequestID());
+            payments.setResponseDescription(stkPushSyncResponse.getResponseDescription());
+            log.info("payments Object {}",objectMapper.writeValueAsString(payments));
+            payments.setEvent(event);
+            paymentsRepository.save(payments);
+
+            return stkPushSyncResponse;
 
         } catch (IOException e) {
             log.error(String.format("Could not perform the STK push request -> %s", e.getLocalizedMessage()));
             return null;
         }
+
+    }
+
+    @Override
+    public void saveMpesaCallbackResponse(StkPushAsyncResponse stkPushAsyncResponse) {
+
+        Payments payments = paymentsRepository.findByMerchantRequestID(stkPushAsyncResponse.getBody().getStkCallback().getMerchantRequestID());
+        payments.setAmount(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue());
+        payments.setPhoneNumber(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(4).getValue());
+        payments.setMpesaReceiptNumber(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(1).getValue());
+        payments.setResultDesc(stkPushAsyncResponse.getBody().getStkCallback().getResultDesc());
+
+        Event event = eventRepository.findById(payments.getEvent().getId()).get();
+
+        System.out.println(BigDecimal.valueOf(Double.valueOf(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue())));
+        BigDecimal sum  = event.getContributedAmount().add(BigDecimal.valueOf(Double.valueOf(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue())));
+        System.out.println(sum);
+
+
+        event.setContributedAmount(sum);
+
+        event.getStkPushPayments().add(payments);
+        eventRepository.save(event);
+        paymentsRepository.save(payments);
+
+
+
+
 
     }
 

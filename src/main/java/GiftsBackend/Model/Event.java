@@ -1,6 +1,7 @@
 package GiftsBackend.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -56,6 +57,10 @@ public class Event {
     private BigDecimal contributedAmount;
     @Column(unique = true)
     private String paymentRef;
+    @JsonIgnore
     @OneToMany(mappedBy = "event")
-    private Set<MpesaPayBillResponse> payments;
+    private Set<MpesaPayBillResponse> PayBillResponses;
+    @JsonIgnore
+    @OneToMany(mappedBy = "event")
+    private Set<Payments> stkPushPayments;
 }

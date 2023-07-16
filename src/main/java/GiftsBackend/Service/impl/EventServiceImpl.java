@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
                 .cost(eventDto.getCost())
                 .eventStatus(EventStatus.UNCONFIRMED)
                 .contributedAmount(BigDecimal.ZERO)
-                .payments(new HashSet<>())
+                .PayBillResponses(new HashSet<>())
                 .build();
 
       return   eventRepository.save(eventToSave);

@@ -11,6 +11,4 @@ public class Constants {
     public static MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
     public static final String CUSTOMER_PAYBILL_ONLINE = "CustomerPayBillOnline";
 
-
-
 }

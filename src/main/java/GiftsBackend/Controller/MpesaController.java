@@ -42,7 +42,6 @@ public class MpesaController {
 
     @PostMapping(path = "/stk-transaction-request", produces = "application/json")
     public ResponseEntity<StkPushSyncResponse> performStkPushTransaction(@RequestBody InternalStkPushRequest internalStkPushRequest) {
-        System.out.println("controller");
         return ResponseEntity.ok(darajaApi.performStkPushTransaction(internalStkPushRequest));
     }
 
@@ -52,6 +51,7 @@ public class MpesaController {
     public ResponseEntity<AcknowledgeResponse> acknowledgeStkPushResponse(@RequestBody StkPushAsyncResponse stkPushAsyncResponse) {
         log.info("======= STK Push Async Response =====");
         log.info(objectMapper.writeValueAsString(stkPushAsyncResponse));
+        darajaApi.saveMpesaCallbackResponse(stkPushAsyncResponse);
         return ResponseEntity.ok(acknowledgeResponse);
     }
 
