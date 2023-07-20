@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -234,27 +235,28 @@ public class DarajaApiImpl implements DarajaApi {
     @Override
     public void saveMpesaCallbackResponse(StkPushAsyncResponse stkPushAsyncResponse) {
 
-        Payments payments = paymentsRepository.findByMerchantRequestID(stkPushAsyncResponse.getBody().getStkCallback().getMerchantRequestID());
-        payments.setAmount(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue());
-        payments.setPhoneNumber(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(4).getValue());
-        payments.setMpesaReceiptNumber(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(1).getValue());
-        payments.setResultDesc(stkPushAsyncResponse.getBody().getStkCallback().getResultDesc());
+   if(stkPushAsyncResponse.getBody().getStkCallback().getResultCode() == 0){
+       Payments payments = paymentsRepository.findByMerchantRequestID(stkPushAsyncResponse.getBody().getStkCallback().getMerchantRequestID());
+       payments.setAmount(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue());
+       payments.setPhoneNumber(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(4).getValue());
+       payments.setMpesaReceiptNumber(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(1).getValue());
+       payments.setResultDesc(stkPushAsyncResponse.getBody().getStkCallback().getResultDesc());
 
-        Event event = eventRepository.findById(payments.getEvent().getId()).get();
+       Event event = eventRepository.findById(payments.getEvent().getId()).get();
 
-        System.out.println(BigDecimal.valueOf(Double.valueOf(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue())));
-        BigDecimal sum  = event.getContributedAmount().add(BigDecimal.valueOf(Double.valueOf(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue())));
-        System.out.println(sum);
+       System.out.println(BigDecimal.valueOf(Double.valueOf(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue())));
+       BigDecimal sum  = event.getContributedAmount().add(BigDecimal.valueOf(Double.valueOf(stkPushAsyncResponse.getBody().getStkCallback().getCallbackMetadata().getItem().get(0).getValue())));
+       System.out.println(sum);
 
+       event.setContributedAmount(sum);
 
-        event.setContributedAmount(sum);
-
-        event.getStkPushPayments().add(payments);
-        eventRepository.save(event);
-        paymentsRepository.save(payments);
-
-
-
+       event.getStkPushPayments().add(payments);
+       eventRepository.save(event);
+       paymentsRepository.save(payments);
+   }else {
+       System.out.println("hello");
+       System.out.println(stkPushAsyncResponse.getBody().getStkCallback().getResultDesc());
+   }
 
 
     }

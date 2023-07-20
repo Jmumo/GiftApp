@@ -1,11 +1,15 @@
 package GiftsBackend.Config;
 
 import GiftsBackend.Repository.TokenRepo;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,7 +64,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         try {
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException e) {
+
+//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             // Handle and log any exceptions here
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
