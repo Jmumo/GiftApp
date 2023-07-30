@@ -42,6 +42,9 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        UserProfile userProfile = new UserProfile();
+        userProfile.setCreatedDate(LocalDateTime.now());
         var user = User.builder()
                 .firstname(request.getFirstName())
                 .lastname(request.getLastname())
@@ -51,7 +54,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
                 .createdDate(LocalDateTime.now())
-                .userProfile(new UserProfile(null,"",LocalDateTime.now(),"","",null))
+                .userProfile(userProfile)
                 .build();
        var savedUser =  userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

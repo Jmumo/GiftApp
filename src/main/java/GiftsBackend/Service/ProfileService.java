@@ -30,7 +30,7 @@ public class ProfileService {
 
     public ImageResponseDto UpdateProfileImage(MultipartFile image, String email) throws IOException {
         Optional<User> user = userRepository.findByEmail(email);
-        System.out.println("user by email");
+        System.out.println(user.get().getUserProfile().getId());
         Long profileId = user.get().getUserProfile().getId();
         System.out.println("profile by id");
         Optional<UserProfile> userProfile = profileRepository.findById(profileId);
