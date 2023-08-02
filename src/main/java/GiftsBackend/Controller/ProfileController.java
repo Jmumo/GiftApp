@@ -1,10 +1,7 @@
 package GiftsBackend.Controller;
 
 
-import GiftsBackend.Dtos.ImageResponseDto;
-import GiftsBackend.Dtos.UpdateAboutDto;
-import GiftsBackend.Dtos.UpdateEliasDto;
-import GiftsBackend.Dtos.UpdateNamesDto;
+import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.User;
 import GiftsBackend.Service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,11 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.UpdateProfileElias(updateEliasDto));
     }
 
+    @PostMapping("/Update")
+    public ResponseEntity<User> UpdateBio(@RequestBody UserBioDto userBioDto){
+      return ResponseEntity.ok(profileService.UpdateUserBio(userBioDto));
+    }
+
     @PostMapping("/update/usernames")
     public ResponseEntity<User> updateNames(@RequestBody UpdateNamesDto updateNamesDto) {
 
@@ -53,11 +55,8 @@ public class ProfileController {
 
 
     @GetMapping("/getprofile/{email}")
-    public ResponseEntity<Optional<User>> getUserprofile(@PathVariable String email) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Optional<User>> getUserprofile(@PathVariable String email) {
 
-
-        System.out.println("email");
-        System.out.println(email);
         Optional<User> user = profileService.getUserprofile(email);
 
         return ResponseEntity.ok(user);

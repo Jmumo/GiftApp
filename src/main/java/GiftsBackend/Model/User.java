@@ -33,7 +33,6 @@ public class User implements UserDetails {
     private String email;
     @Column(nullable = false,unique = true)
     private String phoneNumber;
-    @Column(nullable = true)
     private LocalDate birthDayDate;
     private LocalDateTime createdDate;
     private String password;

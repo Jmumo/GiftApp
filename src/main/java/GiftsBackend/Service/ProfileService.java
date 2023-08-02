@@ -1,10 +1,7 @@
 package GiftsBackend.Service;
 
 
-import GiftsBackend.Dtos.ImageResponseDto;
-import GiftsBackend.Dtos.UpdateAboutDto;
-import GiftsBackend.Dtos.UpdateEliasDto;
-import GiftsBackend.Dtos.UpdateNamesDto;
+import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.User;
 import GiftsBackend.Model.UserProfile;
 import GiftsBackend.Repository.ProfileRepository;
@@ -105,5 +102,14 @@ public class ProfileService {
     private User fetchUser(String email){
         Optional<User> user = userRepository.findByEmail(email);
         return user.get();
+    }
+
+    public User UpdateUserBio(UserBioDto userBioDto) {
+        User user = fetchUser(userBioDto.getEmail());
+        user.setFirstname(userBioDto.getFirstName());
+        user.setLastname(userBioDto.getLastName());
+        user.getUserProfile().setElias(userBioDto.getElias());
+        user.getUserProfile().setAbout(userBioDto.getAbout());
+        return userRepository.save(user);
     }
 }
