@@ -23,8 +23,8 @@ services:
       MYSQL_DATABSE: GiftDB
       MYSQL_USER: root
       MYSQL_ROOT_USER: root
-      MYSQL_PASSWORD: Johnda12#
-      MYSQL_ROOT_PASSWORD: Johnda12#
+      MYSQL_PASSWORD: 
+      MYSQL_ROOT_PASSWORD: 
 
 volumes:
   mysql:
