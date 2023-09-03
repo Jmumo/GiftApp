@@ -1,0 +1,38 @@
+name: Springboot App of Gifts
+
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-deploy:
+    name  : build and deploy springboot app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set Up Jdk 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: 17
+
+      - name: Unit Test code
+        run: mvn -B test --file pom.xml
+
+
+      - name: Build the application code
+        run: |
+          mvn clean
+          mvn -B test --file pom.xml
+
+
+
+
+
+
+
+
