@@ -1,0 +1,37 @@
+services:
+
+  giftapp:
+    container_name: giftApp
+    image: giftapp
+    ports:
+      - "9090:8080"
+    networks:
+      - springboot-network
+    depends_on:
+      - mysql-service
+
+  mysql-service:
+    container_name: mysqlDB
+    image: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - springboot-network
+    environment:
+      MYSQL_DATABSE: GiftDB
+      MYSQL_USER: root
+      MYSQL_ROOT_USER: root
+      MYSQL_PASSWORD: Johnda12#
+      MYSQL_ROOT_PASSWORD: Johnda12#
+
+volumes:
+  mysql:
+
+networks:
+  springboot-network:
+    driver: bridge
+
+
+

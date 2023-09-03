@@ -1,19 +1,19 @@
 
 
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/GiftDB
-#    username: root
-#    password: Johnda12#
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
-#    database: mysql
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysqlDB:3306/GiftDB
+    username: root
+    password: Johnda12#
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
 
 
 #    ?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
@@ -21,20 +21,20 @@
 
 ##Amazon rds Connection
 
-spring:
-  datasource:
-    url: jdbc:mysql://giftappdb.cjmwk0sx2jwt.eu-north-1.rds.amazonaws.com:3306/GiftDB
-    username: root
-    password: Johnda12#
-  jpa:
-    hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.SQLServer2012Dialect
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: mysql
+#spring:
+#  datasource:
+#    url: jdbc:mysql://giftappdb.cjmwk0sx2jwt.eu-north-1.rds.amazonaws.com:3306/GiftDB
+#    username: root
+#    password: Johnda12#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      dialect: org.hibernate.dialect.SQLServer2012Dialect
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    database: mysql
 
 
 
