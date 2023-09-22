@@ -29,6 +29,28 @@ jobs:
           mvn clean
           mvn -B test --file pom.xml
 
+      - name: Build Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKER_HUB_USERNAME}}/GiftApp:latest
+
+      - name: Login to dockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{secrets.DOCKER_HUB_USERNAME}}
+          password: ${{secrets.DOCKER_HUB_ACCESS_TOKEN}}
+
+      - name: push to dockerhub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME}}/GiftApp:latest
+
 
 
 

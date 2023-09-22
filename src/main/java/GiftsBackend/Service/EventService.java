@@ -5,6 +5,7 @@ import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EventService {
@@ -26,4 +27,6 @@ public interface EventService {
     Event confirm(ConfirmEventDto confirmEventDto);
 
     Event contributeToEvent(ContributeEventDto contributeEventDto);
+
+    List<Event> getCalendarEvents(LocalDate startDate, LocalDate endDate);
 }

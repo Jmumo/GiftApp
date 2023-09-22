@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductService {
     Product addProduct(ProductDto productDto, MultipartFile image);
@@ -14,4 +15,7 @@ public interface ProductService {
 
     List<Product> fetchProducts();
 
+    Set<Product> fetchUserWishList();
+
+    Set<Product> addToUserWishList( Long productId);
 }

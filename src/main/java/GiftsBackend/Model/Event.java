@@ -3,6 +3,7 @@ package GiftsBackend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -33,6 +34,7 @@ public class Event {
             generator = "Event_Sequence"
     )
     private Long id;
+    @NotNull(message = "Event Name Cannot be Null")
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;

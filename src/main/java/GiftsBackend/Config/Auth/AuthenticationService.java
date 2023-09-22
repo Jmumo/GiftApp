@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -54,6 +55,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
                 .createdDate(LocalDateTime.now())
+                .wishlist(new HashSet<>())
                 .userProfile(userProfile)
                 .build();
        var savedUser =  userRepository.save(user);

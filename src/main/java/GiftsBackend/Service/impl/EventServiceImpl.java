@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -198,6 +199,11 @@ public class EventServiceImpl implements EventService {
         log.error("fetched event {}",fetchedEvent.getName());
 
         return null;
+    }
+
+    @Override
+    public List<Event> getCalendarEvents(LocalDate startDate, LocalDate endDate) {
+        return eventRepository.findByStartDateAndeAndEndDate(startDate,endDate);
     }
 
 

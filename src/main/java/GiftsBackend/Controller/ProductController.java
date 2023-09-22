@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -42,6 +43,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.fetchProducts());
     }
 
+    @GetMapping("/getUserWishlist")
+    public ResponseEntity<Set<Product>> wishList(){
+        return ResponseEntity.ok(productService.fetchUserWishList());
+    }
 
+
+    @GetMapping("/getUserWishlist/{productId}")
+    public ResponseEntity<Set<Product>> getUserWishList(@PathVariable Long productId ){
+        return ResponseEntity.ok(productService.addToUserWishList(productId));
+    }
 
 }

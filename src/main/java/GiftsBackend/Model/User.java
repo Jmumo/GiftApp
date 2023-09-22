@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -50,6 +51,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Event> events;
 
+    @JsonIgnore
+    @OneToMany
+    private Set<Product> wishlist;
 
 
 

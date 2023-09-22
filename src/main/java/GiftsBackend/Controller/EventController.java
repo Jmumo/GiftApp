@@ -72,4 +72,9 @@ public class EventController {
     public ResponseEntity<Event> contributeToEvent(@RequestBody ContributeEventDto contributeEventDto){
         return ResponseEntity.ok(eventService.contributeToEvent(contributeEventDto));
     }
+
+    @GetMapping("/calendarEvents/{startDate}/{endDate}")
+    public ResponseEntity<List<Event>> getCalendarEvents( @PathVariable LocalDate startDate, @PathVariable LocalDate endDate){
+        return ResponseEntity.ok(eventService.getCalendarEvents(startDate,endDate));
+    }
 }
