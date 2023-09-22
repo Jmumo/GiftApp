@@ -16,6 +16,7 @@ spring:
     database: mysql
 
 
+
 #    ?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
 
 
