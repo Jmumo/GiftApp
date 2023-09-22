@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk
 
-WORKDIR /app
+WORKDIR ./app
 
 COPY target/GiftsBackend-0.0.1-SNAPSHOT.jar  /app/GiftsBackend.jar
 
