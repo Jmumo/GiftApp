@@ -7,6 +7,10 @@ on:
       - master
 
 jobs:
+  build:
+  strategy:
+    matrix:
+      retries: [ 1, 2, 3 ]
   build-deploy:
     name  : build and deploy springboot app
     runs-on: ubuntu-latest
