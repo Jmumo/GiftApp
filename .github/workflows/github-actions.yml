@@ -82,7 +82,7 @@ jobs:
   build-deploy:
     strategy:
       matrix:
-        retries: [1, 2, 3]
+        retries: [1]
     name: Build and deploy Spring Boot app
     runs-on: ubuntu-latest
     steps:
@@ -131,4 +131,4 @@ jobs:
           dockerfile: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/giftapp:latest
-        continue-on-error: ${{ failure() }}
+#        continue-on-error: ${{ failure() }}
