@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysqlDB:3306/GiftDB
-    username: root
-    password: Johnda12#
+    username: 
+    password: 
   jpa:
     hibernate:
       ddl-auto: update
