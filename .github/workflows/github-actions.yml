@@ -33,8 +33,11 @@ jobs:
           mvn -B test --file pom.xml
 
       - name: clear docker cache
-        run: docker builder prune -a
+        run: docker builder prune --force
 
+      - name: Clean Up Workspace
+        run: |
+          rm -rf /tmp/buildkit-mount*  
 
       - name: Build Docker Image
         uses: docker/setup-buildx-action@v1
