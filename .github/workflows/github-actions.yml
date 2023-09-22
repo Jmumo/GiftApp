@@ -10,7 +10,7 @@ jobs:
   build-deploy:
     strategy:
       matrix:
-        retries: [ 1, 2, 3 ]
+        retries: [ 1 ]
     name  : build and deploy springboot app
     runs-on: ubuntu-latest
     steps:
