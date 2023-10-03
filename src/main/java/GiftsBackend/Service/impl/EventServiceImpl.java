@@ -203,7 +203,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> getCalendarEvents(LocalDate startDate, LocalDate endDate) {
-        return eventRepository.findByStartDateAndeAndEndDate(startDate,endDate);
+        return eventRepository.findByStartDateAndEndDate(startDate,endDate);
     }
 
 
