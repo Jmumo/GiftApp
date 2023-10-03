@@ -12,7 +12,7 @@ public interface EventRepository extends JpaRepository<Event,Long> {
     Event findByPaymentRef(String paymentref);
 
 
-    List<Event> findByStartDateAndeAndEndDate(LocalDate startDate, LocalDate endDate);
+    List<Event> findByStartDateAndEndDate(LocalDate startDate, LocalDate endDate);
 
 
 }
