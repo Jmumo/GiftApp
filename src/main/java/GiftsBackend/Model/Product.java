@@ -31,4 +31,9 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private Set<Event> event = new HashSet<>();
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

@@ -8,6 +8,7 @@ import GiftsBackend.Repository.ProductRepository;
 import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.ProductService;
 import com.cloudinary.Cloudinary;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -71,8 +72,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Set<Product> addToUserWishList(Long productId) {
-        return getCurrentUser().getWishlist();
+
+        User user = getCurrentUser();
+        Optional<Product> product = productRepository.findById(productId);
+
+
+        if(product.isPresent()){
+            product.get().setUser(user);
+            user.getWishlist().add(product.get());
+            userRepository.save(user);
+            return new HashSet<>(user.getWishlist());
+            //return user.getWishlist();
+        }
+        return null;
+
     }
 
     private User getCurrentUser(){

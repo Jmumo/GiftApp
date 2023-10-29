@@ -51,8 +51,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Event> events;
 
+
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private Set<Product> wishlist;
 
 

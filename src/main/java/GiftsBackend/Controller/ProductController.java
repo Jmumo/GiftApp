@@ -44,12 +44,12 @@ public class ProductController {
     }
 
     @GetMapping("/getUserWishlist")
-    public ResponseEntity<Set<Product>> wishList(){
+    public ResponseEntity<Set<Product>> getWishList(){
         return ResponseEntity.ok(productService.fetchUserWishList());
     }
 
 
-    @GetMapping("/getUserWishlist/{productId}")
+    @GetMapping("/addToUserWishlist/{productId}")
     public ResponseEntity<Set<Product>> getUserWishList(@PathVariable Long productId ){
         return ResponseEntity.ok(productService.addToUserWishList(productId));
     }

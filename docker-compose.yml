@@ -2,7 +2,9 @@ services:
 
   giftapp:
     container_name: giftApp
-    image: giftapp
+#    image: giftapp
+    build:
+      context: .
     ports:
       - "9090:8080"
     networks:
@@ -21,10 +23,10 @@ services:
       - springboot-network
     environment:
       MYSQL_DATABSE: GiftDB
-      MYSQL_USER: root
-      MYSQL_ROOT_USER: root
-      MYSQL_PASSWORD: 
-      MYSQL_ROOT_PASSWORD: 
+      MYSQL_USER: john
+#      MYSQL_ROOT_USER: root
+      MYSQL_PASSWORD: Johnda12#
+      MYSQL_ROOT_PASSWORD: Johnda12#
 
 volumes:
   mysql:
