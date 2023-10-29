@@ -1,99 +1,10 @@
 
-#
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://mysqlDB:3306/GiftDB
-#    username: root
-#    password: Johnda12#
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
-#    database: mysql
-
-
-
-#    ?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false
-
-
-##Amazon rds Connection
-
 spring:
-  datasource:
-    url: jdbc:mysql://giftappdb.cjmwk0sx2jwt.eu-north-1.rds.amazonaws.com:3306/GiftDB
-    username: root
-    password: Johnda12#
-  jpa:
-    hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.SQLServer2012Dialect
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    database: mysql
+  config:
+    import: "optional:file:secrets.yml"
 
 
 
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
-
-
-mpesa:
-  daraja:
-    consumer-key:  hFVcbjyjAyvV1G6pMmX65gEsLPp6LdRu
-    consumer-secret: kZ67CRABLdT682QC
-    grant-type: client_credentials
-    oauth-endpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
-    registerUrlEndpoint: https://sandbox.safaricom.co.ke/mpesa/c2b/v2/registerurl
-    simulate-transaction-endpoint: https://sandbox.safaricom.co.ke/mpesa/c2b/v2/simulate
-    shortCode: 174379
-    confirmation-url: https://0d2b-130-61-85-147.ngrok-free.app/mobile-money/confirmation
-    validation-url: https://0d2b-130-61-85-147.ngrok-free.app/mobile-money/validation
-    responseType: Completed
-    stkPassKey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
-    stkPushShortCode: 174379
-    stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
-    stkPushRequestCallbackUrl: https://www.friendsgift.co.ke/mobile-money/stk-transaction-result
-
-
-#
-#spring:
-#  datasource:
-#    url: jdbc:sqlserver://giftdb.database.windows.net:1433;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-#    username: johnda
-#    password: Giftdb12#
-#  jpa:
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: create
-#      dialect : org.hibernate.dialect.SQLServer2012Dialect
-#
-#    properties:
-#      hibernate:
-#        format_sql: true
-#    database: mysql
-
-
-
-app:
-  security:
-    jwt:
-      secretKey: 70337336763979244226452948404D635166546A576E5A7234743777217A2543
-      expiration: 86400000       #a day
-      refresh-token:
-        expiration: 604800000     #seven days
-
-  cloudinary:
-    API_KEY: 662877474753217
-    API_SECRET: F4lnVAARoy3IxOr-O6GyJbSNvhU
-    CLOUD_NAME: jmnmumo
 
 
 
