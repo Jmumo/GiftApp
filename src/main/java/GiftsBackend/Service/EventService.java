@@ -3,6 +3,8 @@ package GiftsBackend.Service;
 import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
+import GiftsBackend.Model.Product;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -29,4 +31,6 @@ public interface EventService {
     Event contributeToEvent(ContributeEventDto contributeEventDto);
 
     List<Event> getCalendarEvents(LocalDate startDate, LocalDate endDate);
+
+    List<Event> searchProduct(String name, String sort, Integer pageNumber, Integer pageSize, Sort.Direction sortdirection);
 }

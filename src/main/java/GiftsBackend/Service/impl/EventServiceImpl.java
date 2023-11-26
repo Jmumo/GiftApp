@@ -8,10 +8,15 @@ import GiftsBackend.Repository.ProductRepository;
 import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.EventService;
 import GiftsBackend.Utils.HelperUtility;
+import GiftsBackend.Utils.SearchSpecifications;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final EventCategoryRepository eventCategoryRepository;
     private final Cloudinary cloudinary;
     private final ProductRepository productRepository;
+    private final SearchSpecifications<Event> filterSpecifications;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -206,5 +212,34 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByStartDateAndEndDate(startDate,endDate);
     }
 
+    @Override
+    public List<Event> searchProduct(String name, String sort, Integer pageNumber, Integer pageSize, Sort.Direction sortdirection) {
+
+
+
+        Specification<Event> cardSpecification = filterSpecifications.searchSpecification(name);
+
+        if(pageNumber == null){
+            pageNumber = 0;
+        }
+
+        if(pageSize == null){
+            pageSize =1;
+        }
+        if(sort == null){
+            sort = "startDate";
+        }
+
+        if(sortdirection == null){
+            sortdirection = Sort.Direction.ASC;
+        }else {
+            sortdirection = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortdirection,sort));
+
+        return eventRepository.findAll(cardSpecification,pageable);
+
+    }
 
 }

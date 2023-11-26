@@ -4,8 +4,10 @@ package GiftsBackend.Controller;
 import GiftsBackend.Dtos.*;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.EventCategory;
+import GiftsBackend.Model.Product;
 import GiftsBackend.Service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,5 +79,17 @@ public class EventController {
     public ResponseEntity<List<Event>> getCalendarEvents( @RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         System.out.println("at the controller");
         return ResponseEntity.ok(eventService.getCalendarEvents(startDate,endDate));
+    }
+
+
+
+    @GetMapping("/searchEvents")
+    public List<Event> searchCard(  @RequestParam(required = false) String name,
+                                    @RequestParam(required = false) String sort,
+                                    @RequestParam(required = false) Integer pageNumber,
+                                    @RequestParam(required = false) Integer pageSize,
+                                    @RequestParam(required = false) Sort.Direction Sortdirection
+    ){
+        return eventService.searchProduct(name,sort,pageNumber,pageSize,Sortdirection);
     }
 }
