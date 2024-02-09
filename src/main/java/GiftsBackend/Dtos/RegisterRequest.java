@@ -2,10 +2,7 @@ package GiftsBackend.Dtos;
 
 
 import GiftsBackend.Model.UserProfile;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +28,7 @@ public class RegisterRequest {
     @NotBlank(message = "phoneNumber name cannot be blank")
     private String phoneNumber;
     @NotNull(message = "birthDayDate name cannot be null")
-    @NotBlank(message = "birthDayDate name cannot be blank")
+    @Past(message = "Birthday date must be in the past")
     private LocalDate birthDayDate;
     @NotNull(message = "password name cannot be null")
     @NotBlank(message = "password name cannot be blank")
