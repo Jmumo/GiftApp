@@ -166,6 +166,7 @@ jobs:
             cd GiftApp
             git pull
             sh stop.sh
+            sleep 300
             sh start.sh
 
 
