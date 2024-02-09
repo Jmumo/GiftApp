@@ -167,7 +167,30 @@ jobs:
             git pull
             sh stop.sh
             sleep 300
+            
+            
+             # Function to check if a port is in use
+            is_port_in_use() {
+            local port=$1
+            if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null; then
+            return 0  # Port is in use
+            else
+            return 1  # Port is not in use
+            fi
+            }
+
+      # Check if port 8080 is already in use
+            while is_port_in_use 8080; do
+            echo "Port 8080 is already in use. Waiting for 3 minutes..."
+            sleep 180
+            done
+            
+            # Port 8080 is not in use, start the application
+            echo "Port 8080 is available. Starting the application..."
             sh start.sh
+            
+           
+
 
 
 
