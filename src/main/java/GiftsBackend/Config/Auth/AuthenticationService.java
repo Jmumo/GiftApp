@@ -5,6 +5,7 @@ import GiftsBackend.Config.JwtService;
 import GiftsBackend.Dtos.AuthenticationRequest;
 import GiftsBackend.Dtos.AuthenticationResponse;
 import GiftsBackend.Dtos.RegisterRequest;
+import GiftsBackend.Execptions.DuplicateUserExeption;
 import GiftsBackend.Model.Role;
 import GiftsBackend.Model.User;
 import GiftsBackend.Model.UserProfile;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        Optional<User> Existinguser = userRepository.findByEmail(request.getEmail());
+
+
+        if(!Existinguser.isEmpty()){
+            try {
+                throw new DuplicateUserExeption(Existinguser.get().getEmail());
+            } catch (DuplicateUserExeption e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         UserProfile userProfile = new UserProfile();
         userProfile.setCreatedDate(LocalDateTime.now());
@@ -58,6 +71,8 @@ public class AuthenticationService {
                 .wishlist(new HashSet<>())
                 .userProfile(userProfile)
                 .build();
+
+
        var savedUser =  userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
