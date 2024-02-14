@@ -44,12 +44,12 @@ public class ControllerAdvice {
         ErrorClass errorClass = buildErrorResponse(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage(), "400");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorClass);
 
-
-//        ex.getBindingResult().getAllErrors().forEach((error) -> {
-//
-//        ErrorClass errorClass = buildErrorResponse(error.getDefaultMessage(),"400");
-//        });
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err)
+    }
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorClass> handleInvalidToken(InvalidTokenException ex){
+        ErrorClass errorClass = buildErrorResponse(ex.getMessage(),"401");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorClass);
     }
 
 

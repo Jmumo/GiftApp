@@ -44,9 +44,11 @@ public class EventServiceImpl implements EventService {
     public List<Event> getUserEvents(String email) {
 
         Optional<User> user = userRepository.findByEmail(email);
+        System.out.println("getting the user");
 
         if(user.isPresent()){
             List<Event> userEvents = eventRepository.findByUserId(user.get().getId());
+            System.out.println("getting the user events");
 
             if(userEvents.isEmpty()){
                 return new ArrayList<>();

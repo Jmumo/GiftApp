@@ -1,5 +1,6 @@
 package GiftsBackend.Config;
 
+import GiftsBackend.Execptions.InvalidTokenException;
 import GiftsBackend.Repository.TokenRepo;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -9,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +52,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
             Boolean isUserTokenValid = tokenRepo.findByToken(jwt).map(token -> !token.isExpired() && !token.isRevoked()).orElse(false);
+
+            if(!isUserTokenValid){
+                throw new InvalidTokenException("exception");
+            }
+
+//            throw invalid token exception
 
             if (jwtService.isValid(jwt, userDetails) && isUserTokenValid) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

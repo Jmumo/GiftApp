@@ -183,26 +183,3 @@ jobs:
             
             sh start.sh
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-
-#            # Check if port 8080 is already in use
-#                    while is_port_in_use 8080; do
-#                    echo "Port 8080 is already in use. Waiting for 3 minutes..."
-#                    sleep 180
-#                    done
-#
-#            # Port 8080 is not in use, start the application
-#                    echo "Port 8080 is available. Starting the application..."
-#                    sh start.sh

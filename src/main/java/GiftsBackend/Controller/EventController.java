@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,13 +27,12 @@ public class EventController {
     @PostMapping("/save")
     public ResponseEntity<Event> saveEvent(@RequestBody EventDto eventDto
     ) {
-        System.out.println("hello");
         return ResponseEntity.ok(eventService.addEvent(eventDto));
     }
 
     @GetMapping("/user/events/{email}")
     public ResponseEntity<List<Event>> getUserEvents(@PathVariable String email) {
-        return ResponseEntity.ok(eventService.getUserEvents(email));
+       return ResponseEntity.ok(eventService.getUserEvents(email));
     }
 
     @PostMapping("/uploadimage")
