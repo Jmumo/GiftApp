@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                         "/api/v1/auth/authenticate",
                         "/api/v1/profile/update/{email}",
                         "/mobile-money/validation",
+                        "/api/v1/auth/refreshToken",
                         "/mobile-money/confirmation",
                         "/mobile-money/stk-transaction-result")
 

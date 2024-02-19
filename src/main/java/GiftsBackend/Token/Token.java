@@ -28,6 +28,8 @@ public class Token {
 
     private boolean revoked;
 
+    private boolean refresh;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")

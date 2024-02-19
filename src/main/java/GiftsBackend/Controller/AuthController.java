@@ -4,8 +4,8 @@ package GiftsBackend.Controller;
 import GiftsBackend.Config.Auth.AuthenticationService;
 import GiftsBackend.Dtos.AuthenticationRequest;
 import GiftsBackend.Dtos.AuthenticationResponse;
+import GiftsBackend.Dtos.RefreshTokenRequest;
 import GiftsBackend.Dtos.RegisterRequest;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -36,8 +36,16 @@ public class AuthController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
+//    @PostMapping("/refreshToken")
+//    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//    authenticationService.refreshToken(request,response);
+//    }
+
+
     @PostMapping("/refreshToken")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    authenticationService.refreshToken(request,response);
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) throws IOException {
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
+
+
 }
