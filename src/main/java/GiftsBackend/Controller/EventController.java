@@ -30,9 +30,9 @@ public class EventController {
         return ResponseEntity.ok(eventService.addEvent(eventDto));
     }
 
-    @GetMapping("/user/events/{email}")
-    public ResponseEntity<List<Event>> getUserEvents(@PathVariable String email) {
-       return ResponseEntity.ok(eventService.getUserEvents(email));
+    @GetMapping("/user/events")
+    public ResponseEntity<List<Event>> getUserEvents() {
+       return ResponseEntity.ok(eventService.getUserEvents());
     }
 
     @PostMapping("/uploadimage")

@@ -45,7 +45,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<Event> getUserEvents(String email) {
+    public List<Event> getUserEvents() {
 
         Optional<User> user = Optional.ofNullable(getCurrentLoggedInUserEmail());
 //        System.out.println("getting the user");

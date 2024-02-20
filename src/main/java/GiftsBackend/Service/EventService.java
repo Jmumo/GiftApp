@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface EventService {
 
-    List<Event> getUserEvents(String email);
+    List<Event> getUserEvents();
 
     Event addEvent(EventDto eventDto);
 
