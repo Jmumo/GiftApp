@@ -1,6 +1,8 @@
 package GiftsBackend.Service.impl;
 
 import GiftsBackend.Dtos.*;
+import GiftsBackend.Execptions.InvalidTokenException;
+import GiftsBackend.Execptions.UserNotFoundException;
 import GiftsBackend.Model.*;
 import GiftsBackend.Repository.EventCategoryRepository;
 import GiftsBackend.Repository.EventRepository;
@@ -17,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,12 +47,12 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getUserEvents(String email) {
 
-        Optional<User> user = userRepository.findByEmail(email);
-        System.out.println("getting the user");
+        Optional<User> user = Optional.ofNullable(getCurrentLoggedInUserEmail());
+//        System.out.println("getting the user");
 
         if(user.isPresent()){
             List<Event> userEvents = eventRepository.findByUserId(user.get().getId());
-            System.out.println("getting the user events");
+//            System.out.println("getting the user events");
 
             if(userEvents.isEmpty()){
                 return new ArrayList<>();
@@ -242,6 +246,17 @@ public class EventServiceImpl implements EventService {
 
         return eventRepository.findAll(cardSpecification,pageable);
 
+    }
+
+
+
+    public User getCurrentLoggedInUserEmail(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if(email.isEmpty()){
+            throw new InvalidTokenException("No User Authentication found");
+        }
+       return userRepository.findByEmail(email).get();
     }
 
 }
