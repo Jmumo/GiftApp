@@ -11,9 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -65,12 +68,14 @@ public class ProductController {
 
     @GetMapping("/searchProducts")
     public List<Product> searchCard(@RequestParam(required = false) String name,
-                                 @RequestParam(required = false) String sort,
-                                 @RequestParam(required = false) Integer pageNumber,
-                                 @RequestParam(required = false) Integer pageSize,
-                                 @RequestParam(required = false) Sort.Direction Sortdirection
+                                    @RequestParam(required = false) String priceDirection,
+                                    @RequestParam(required = false) LocalDate dateFilterDirection,
+                                    @RequestParam(required = false) String Brand,
+                                    @RequestParam(required = false) Integer pageNumber,
+                                    @RequestParam(required = false) Integer pageSize
     ){
-        return productService.searchProduct(name,sort,pageNumber,pageSize,Sortdirection);
+        return productService.searchProduct(name, priceDirection, dateFilterDirection, Brand, pageNumber,pageSize);
+
     }
 
 }

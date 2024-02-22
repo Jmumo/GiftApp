@@ -2,6 +2,7 @@ package GiftsBackend.Service.impl;
 
 import GiftsBackend.Dtos.ProductDto;
 import GiftsBackend.Execptions.UserNotFoundException;
+import GiftsBackend.Model.Event;
 import GiftsBackend.Model.Product;
 import GiftsBackend.Model.User;
 import GiftsBackend.Repository.ProductRepository;
@@ -9,8 +10,15 @@ import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.ProductService;
 import GiftsBackend.Utils.SearchSpecifications;
 import com.cloudinary.Cloudinary;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.jpa.QueryHints;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +41,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final SearchSpecifications<Product> filterSpecifications;
+
+    private final EntityManager entityManager;
 
 
 
@@ -97,30 +108,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchProduct(String name, String sort, Integer pageNumber, Integer pageSize, Sort.Direction sortdirection) {
+    public List<Product> searchProduct( String name,
+                                        String priceDirection,
+                                        LocalDate dateFilterDirection,
+                                        String Brand,
+                                        Integer pageNumber,
+                                        Integer pageSize
+                                       ) {
 
-        Specification<Product> cardSpecification = filterSpecifications.searchSpecification(name);
+        return searchAndFilterProducts(name,priceDirection,dateFilterDirection,Brand,pageNumber,pageSize);
 
-        if(pageNumber == null){
-            pageNumber = 0;
-        }
-
-        if(pageSize == null){
-            pageSize =1;
-        }
-        if(sort == null){
-            sort = "createdDate";
-        }
-
-        if(sortdirection == null){
-            sortdirection = Sort.Direction.ASC;
-        }else {
-            sortdirection = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortdirection,sort));
-
-        return productRepository.findAll(cardSpecification,pageable);
     }
 
     @Override
@@ -144,5 +141,66 @@ public class ProductServiceImpl implements ProductService {
             return user.get();
         }
         throw new UserNotFoundException(user.get().getEmail());
+    }
+
+
+
+   private List<Product> searchAndFilterProducts(
+            String name,
+            String priceDirection,
+            LocalDate dateFilterDirection,
+            String Brand,
+            Integer pageNumber,
+            Integer pageSize
+    ){
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+       if(name != null){
+           predicates.add(criteriaBuilder.equal(root.get("name"),name));
+       }
+
+        if(priceDirection != null){
+            if(priceDirection.equals("HIGHEST")){
+                criteriaQuery.orderBy((criteriaBuilder.asc(root.get("price"))));
+            }
+            criteriaQuery.orderBy((criteriaBuilder.desc(root.get("price"))));
+
+        }
+
+       if(dateFilterDirection != null){
+           if(dateFilterDirection.equals("ASC")) {
+               criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDate")));
+           }
+           criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+
+       }
+
+        if(Brand != null){
+            predicates.add(criteriaBuilder.equal(root.get("Brand"),Brand));
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+
+        TypedQuery<Product> typedQuery = entityManager.createQuery(criteriaQuery);
+        // Enable logging for this query
+        typedQuery.setHint(QueryHints.HINT_COMMENT, "Generated SQL: " + criteriaQuery.toString());
+
+
+        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize);
+
+        // Print the generated SQL query
+        System.out.println("Generated SQL Query: " + typedQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
+
+        return entityManager.createQuery(criteriaQuery)
+                .setFirstResult((int) pageRequest.getOffset())
+                .setMaxResults(pageRequest.getPageSize())
+                .getResultList();
+
     }
 }

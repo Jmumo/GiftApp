@@ -5,6 +5,7 @@ import GiftsBackend.Model.Product;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +21,14 @@ public interface ProductService {
 
     Set<Product> addToUserWishList( Long productId);
 
-    List<Product> searchProduct(String name, String sort, Integer pageNumber, Integer pageSize, Sort.Direction sortdirection);
+    List<Product> searchProduct(
+            String name,
+            String priceDirection,
+            LocalDate dateFilterDirection,
+            String Brand,
+            Integer pageNumber,
+            Integer pageSize
+    );
 
     Set<Product> removeToUserWishList(Long productId);
 }

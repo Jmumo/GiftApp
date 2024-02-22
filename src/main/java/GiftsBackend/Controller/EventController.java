@@ -77,7 +77,6 @@ public class EventController {
 
     @GetMapping("/calendarEvents")
     public ResponseEntity<List<Event>> getCalendarEvents( @RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
-        System.out.println("at the controller");
         return ResponseEntity.ok(eventService.getCalendarEvents(startDate,endDate));
     }
 
@@ -85,11 +84,16 @@ public class EventController {
 
     @GetMapping("/searchEvents")
     public List<Event> searchCard(  @RequestParam(required = false) String name,
-                                    @RequestParam(required = false) String sort,
                                     @RequestParam(required = false) Integer pageNumber,
-                                    @RequestParam(required = false) Integer pageSize,
-                                    @RequestParam(required = false) Sort.Direction Sortdirection
+                                    @RequestParam(required = false)Integer pageSize,
+                                    @RequestParam(required = false) String dateFilterDirection,
+                                    @RequestParam(required = false) String occassion,
+                                    @RequestParam(required = false) String color
+
     ){
-        return eventService.searchProduct(name,sort,pageNumber,pageSize,Sortdirection);
+      return eventService.searchProduct(name, pageNumber, pageSize, occassion,color,dateFilterDirection);
+
     }
 }
+
+

@@ -32,5 +32,5 @@ public interface EventService {
 
     List<Event> getCalendarEvents(LocalDate startDate, LocalDate endDate);
 
-    List<Event> searchProduct(String name, String sort, Integer pageNumber, Integer pageSize, Sort.Direction sortdirection);
+    List<Event> searchProduct(String name,  Integer pageNumber, Integer pageSize,String occassion,String color,String dateFilterDirection);
 }

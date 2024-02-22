@@ -4,6 +4,14 @@ spring:
     import: "optional:file:secrets.yml"
 
 
+#logging:
+#  level:
+#    org:
+#      hibernate:
+
+
+
+
 
 
 

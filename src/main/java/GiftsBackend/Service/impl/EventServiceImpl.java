@@ -13,8 +13,15 @@ import GiftsBackend.Utils.HelperUtility;
 import GiftsBackend.Utils.SearchSpecifications;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.jpa.QueryHints;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,6 +48,8 @@ public class EventServiceImpl implements EventService {
     private final Cloudinary cloudinary;
     private final ProductRepository productRepository;
     private final SearchSpecifications<Event> filterSpecifications;
+
+    private final EntityManager entityManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -219,32 +228,38 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> searchProduct(String name, String sort, Integer pageNumber, Integer pageSize, Sort.Direction sortdirection) {
+    public List<Event> searchProduct(String name,  Integer pageNumber, Integer pageSize,String occassion,String color,String dateFilterDirection) {
 
 
 
-        Specification<Event> cardSpecification = filterSpecifications.searchSpecification(name);
+//        Specification<Event> cardSpecification = filterSpecifications.searchSpecification(name);
+//
+//        if(pageNumber == null){
+//            pageNumber = 0;
+//        }
+//
+//        if(pageSize == null){
+//            pageSize =1;
+//        }
+//        if(sort == null){
+//            sort = "startDate";
+//        }
+//
+//        if(sortdirection == null){
+//            sortdirection = Sort.Direction.ASC;
+//        }else {
+//            sortdirection = Sort.Direction.DESC;
+//        }
+//
+//        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortdirection,sort));
+//
+//        return eventRepository.findAll(cardSpecification,pageable);
 
-        if(pageNumber == null){
-            pageNumber = 0;
-        }
+  //      Pageable pageable = PageRequest.of(pageNumber,pageSize);
 
-        if(pageSize == null){
-            pageSize =1;
-        }
-        if(sort == null){
-            sort = "startDate";
-        }
+        List<Event> events = searchAndFilterEvents(name, occassion, color, dateFilterDirection,pageNumber,pageSize);
+        return events;
 
-        if(sortdirection == null){
-            sortdirection = Sort.Direction.ASC;
-        }else {
-            sortdirection = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortdirection,sort));
-
-        return eventRepository.findAll(cardSpecification,pageable);
 
     }
 
@@ -259,4 +274,79 @@ public class EventServiceImpl implements EventService {
        return userRepository.findByEmail(email).get();
     }
 
+
+   private List<Event> searchAndFilterEvents(
+           String name,
+           String occasion,
+           String color,
+           String dateFilterDirection,
+           Integer pageNumber,
+           Integer pageSize
+    ){
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Event> criteriaQuery = criteriaBuilder.createQuery(Event.class);
+        Root<Event> root = criteriaQuery.from(Event.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if(name != null){
+            predicates.add(criteriaBuilder.like(root.get("name"),name));
+        }
+
+        if(occasion != null){
+            predicates.add(criteriaBuilder.equal(root.get("category"),occasion));
+        }
+
+        if(color != null){
+            predicates.add(criteriaBuilder.equal(root.get("color"),color));
+        }
+
+        if(dateFilterDirection != null){
+            if(dateFilterDirection.equals("ASC")) {
+                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
+            }
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("startDate")));
+
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+
+        TypedQuery<Event> typedQuery = entityManager.createQuery(criteriaQuery);
+        // Enable logging for this query
+        typedQuery.setHint(QueryHints.HINT_COMMENT, "Generated SQL: " + criteriaQuery.toString());
+
+
+        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize);
+
+        // Print the generated SQL query
+        System.out.println("Generated SQL Query: " + typedQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
+
+        return entityManager.createQuery(criteriaQuery)
+        .setFirstResult((int) pageRequest.getOffset())
+        .setMaxResults(pageRequest.getPageSize())
+        .getResultList();
+
+    }
+
 }
+
+
+
+
+
+
+//List<Product> products = entityManager.createQuery(criteriaQuery)
+//        .setFirstResult((int) pageable.getOffset())
+//        .setMaxResults(pageable.getPageSize())
+//        .getResultList();
+//
+//// Count the total number of records without pagination
+//CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+//        countQuery.select(criteriaBuilder.count(countQuery.from(Product.class)));
+//Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+//
+//// Return a page containing the results and total count
+//        return new PageImpl<>(products, pageable, totalCount);
+//        }

@@ -25,6 +25,7 @@ public class Product {
     private String ImageUrl;
     private LocalDate createdDate;
     private String Description;
+    private String Brand;
     @Convert(converter = Converter.class)
     private Map<String, String> attributes;
     @JsonIgnore

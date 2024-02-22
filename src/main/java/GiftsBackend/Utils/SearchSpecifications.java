@@ -22,6 +22,8 @@ public class SearchSpecifications <T> {
                 if (name != null && !name.isEmpty()) {
                     predicates.add(criteriaBuilder.equal(root.get("name"),name));
                 }
+
+
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }
         };
