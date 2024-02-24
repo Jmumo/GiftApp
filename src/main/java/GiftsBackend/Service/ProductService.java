@@ -24,7 +24,7 @@ public interface ProductService {
     List<Product> searchProduct(
             String name,
             String priceDirection,
-            LocalDate dateFilterDirection,
+            String dateFilterDirection,
             String Brand,
             Integer pageNumber,
             Integer pageSize

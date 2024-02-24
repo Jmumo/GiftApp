@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> searchProduct( String name,
                                         String priceDirection,
-                                        LocalDate dateFilterDirection,
+                                        String dateFilterDirection,
                                         String Brand,
                                         Integer pageNumber,
                                         Integer pageSize
@@ -146,9 +146,9 @@ public class ProductServiceImpl implements ProductService {
 
 
    private List<Product> searchAndFilterProducts(
-            String name,
+            String Name,
             String priceDirection,
-            LocalDate dateFilterDirection,
+            String dateFilterDirection,
             String Brand,
             Integer pageNumber,
             Integer pageSize
@@ -160,15 +160,15 @@ public class ProductServiceImpl implements ProductService {
 
         List<Predicate> predicates = new ArrayList<>();
 
-       if(name != null){
-           predicates.add(criteriaBuilder.equal(root.get("name"),name));
+       if(Name != null){
+           predicates.add(criteriaBuilder.like(root.get("Name"),Name));
        }
 
         if(priceDirection != null){
             if(priceDirection.equals("HIGHEST")){
-                criteriaQuery.orderBy((criteriaBuilder.asc(root.get("price"))));
+                criteriaQuery.orderBy((criteriaBuilder.asc(root.get("Price"))));
             }
-            criteriaQuery.orderBy((criteriaBuilder.desc(root.get("price"))));
+            criteriaQuery.orderBy((criteriaBuilder.desc(root.get("Price"))));
 
         }
 
