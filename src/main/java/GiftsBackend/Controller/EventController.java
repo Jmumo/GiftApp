@@ -83,7 +83,7 @@ public class EventController {
 
 
     @GetMapping("/searchEvents")
-    public List<Event> searchCard(  @RequestParam(required = false) String name,
+    public EventSearchResponse searchCard(  @RequestParam(required = false) String name,
                                     @RequestParam(required = false) Integer pageNumber,
                                     @RequestParam(required = false)Integer pageSize,
                                     @RequestParam(required = false) String dateFilterDirection,

@@ -1,6 +1,7 @@
 package GiftsBackend.Service;
 
 import GiftsBackend.Dtos.ProductDto;
+import GiftsBackend.Dtos.ProductsSearchResposnse;
 import GiftsBackend.Model.Product;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public interface ProductService {
 
     Set<Product> addToUserWishList( Long productId);
 
-    List<Product> searchProduct(
+    ProductsSearchResposnse searchProduct(
             String name,
             String priceDirection,
             String dateFilterDirection,

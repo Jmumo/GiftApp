@@ -1,6 +1,7 @@
 package GiftsBackend.Service.impl;
 
 import GiftsBackend.Dtos.ProductDto;
+import GiftsBackend.Dtos.ProductsSearchResposnse;
 import GiftsBackend.Execptions.UserNotFoundException;
 import GiftsBackend.Model.Event;
 import GiftsBackend.Model.Product;
@@ -10,6 +11,7 @@ import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.ProductService;
 import GiftsBackend.Utils.SearchSpecifications;
 import com.cloudinary.Cloudinary;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -40,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
     private final Cloudinary cloudinary;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
     private final SearchSpecifications<Product> filterSpecifications;
 
     private final EntityManager entityManager;
@@ -108,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchProduct( String name,
+    public ProductsSearchResposnse searchProduct( String name,
                                         String priceDirection,
                                         String dateFilterDirection,
                                         String Brand,
@@ -116,7 +119,20 @@ public class ProductServiceImpl implements ProductService {
                                         Integer pageSize
                                        ) {
 
-        return searchAndFilterProducts(name,priceDirection,dateFilterDirection,Brand,pageNumber,pageSize);
+
+        List<Product> products = searchAndFilterProducts(name, priceDirection, dateFilterDirection, Brand, pageNumber, pageSize);
+
+
+        ProductsSearchResposnse productsSearchResposnse = new ProductsSearchResposnse();
+        productsSearchResposnse.setCurrentPage(pageNumber);
+        productsSearchResposnse.setNextPage(pageNumber + 1);
+        productsSearchResposnse.setProductList(products);
+        if(pageNumber > 0){
+            productsSearchResposnse.setPreviousPage(pageNumber-1);
+        }
+        productsSearchResposnse.setPreviousPage(0);
+
+        return productsSearchResposnse;
 
     }
 
@@ -197,10 +213,10 @@ public class ProductServiceImpl implements ProductService {
         // Print the generated SQL query
         System.out.println("Generated SQL Query: " + typedQuery.unwrap(org.hibernate.query.Query.class).getQueryString());
 
-        return entityManager.createQuery(criteriaQuery)
-                .setFirstResult((int) pageRequest.getOffset())
-                .setMaxResults(pageRequest.getPageSize())
-                .getResultList();
+       return entityManager.createQuery(criteriaQuery)
+               .setFirstResult((int) pageRequest.getOffset())
+               .setMaxResults(pageRequest.getPageSize())
+               .getResultList();
 
-    }
+   }
 }

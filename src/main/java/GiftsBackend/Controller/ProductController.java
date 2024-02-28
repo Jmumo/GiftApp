@@ -1,6 +1,7 @@
 package GiftsBackend.Controller;
 
 import GiftsBackend.Dtos.ProductDto;
+import GiftsBackend.Dtos.ProductsSearchResposnse;
 import GiftsBackend.Model.Product;
 import GiftsBackend.Service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -67,12 +68,12 @@ public class ProductController {
 
 
     @GetMapping("/searchProducts")
-    public List<Product> searchCard(@RequestParam(required = false) String name,
-                                    @RequestParam(required = false) String priceDirection,
-                                    @RequestParam(required = false) String dateFilterDirection,
-                                    @RequestParam(required = false) String Brand,
-                                    @RequestParam(required = false) Integer pageNumber,
-                                    @RequestParam(required = false) Integer pageSize
+    public ProductsSearchResposnse searchCard(@RequestParam(required = false) String name,
+                                              @RequestParam(required = false) String priceDirection,
+                                              @RequestParam(required = false) String dateFilterDirection,
+                                              @RequestParam(required = false) String Brand,
+                                              @RequestParam(required = false) Integer pageNumber,
+                                              @RequestParam(required = false) Integer pageSize
     ){
         return productService.searchProduct(name, priceDirection, dateFilterDirection, Brand, pageNumber,pageSize);
 

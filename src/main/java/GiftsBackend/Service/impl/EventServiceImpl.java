@@ -228,37 +228,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> searchProduct(String name,  Integer pageNumber, Integer pageSize,String occassion,String color,String dateFilterDirection) {
-
-
-
-//        Specification<Event> cardSpecification = filterSpecifications.searchSpecification(name);
-//
-//        if(pageNumber == null){
-//            pageNumber = 0;
-//        }
-//
-//        if(pageSize == null){
-//            pageSize =1;
-//        }
-//        if(sort == null){
-//            sort = "startDate";
-//        }
-//
-//        if(sortdirection == null){
-//            sortdirection = Sort.Direction.ASC;
-//        }else {
-//            sortdirection = Sort.Direction.DESC;
-//        }
-//
-//        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortdirection,sort));
-//
-//        return eventRepository.findAll(cardSpecification,pageable);
-
-  //      Pageable pageable = PageRequest.of(pageNumber,pageSize);
+    public EventSearchResponse searchProduct(String name,  Integer pageNumber, Integer pageSize,String occassion,String color,String dateFilterDirection) {
 
         List<Event> events = searchAndFilterEvents(name, occassion, color, dateFilterDirection,pageNumber,pageSize);
-        return events;
+
+        EventSearchResponse eventSearchResponse =  new EventSearchResponse();
+        eventSearchResponse.setProductList(events);
+        eventSearchResponse.setCurrentPage(pageNumber);
+        eventSearchResponse.setNextPage(pageNumber+1);
+        if(pageNumber > 0){
+            eventSearchResponse.setPreviouspage(pageNumber - 1);
+        }
+        eventSearchResponse.setPreviouspage(0);
+        return eventSearchResponse;
 
 
     }
