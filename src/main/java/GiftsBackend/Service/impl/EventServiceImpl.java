@@ -273,7 +273,7 @@ public class EventServiceImpl implements EventService {
         List<Predicate> predicates = new ArrayList<>();
 
         if(name != null){
-            predicates.add(criteriaBuilder.like(root.get("name"),name));
+            predicates.add(criteriaBuilder.like(root.get("name"),"%"+name+"%"));
         }
 
         if(occasion != null){

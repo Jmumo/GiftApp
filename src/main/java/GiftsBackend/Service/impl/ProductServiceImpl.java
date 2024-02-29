@@ -177,7 +177,8 @@ public class ProductServiceImpl implements ProductService {
         List<Predicate> predicates = new ArrayList<>();
 
        if(Name != null){
-           predicates.add(criteriaBuilder.like(root.get("Name"),Name));
+           predicates.add(criteriaBuilder.like(root.get("Name"),"%"+Name+"%"));
+
        }
 
         if(priceDirection != null){
