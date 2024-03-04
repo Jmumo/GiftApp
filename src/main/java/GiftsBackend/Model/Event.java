@@ -8,9 +8,9 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -42,6 +42,7 @@ public class Event {
     private LocalTime startTime;
     private LocalTime endTime;
     private String imageUrl;
+    private long createdDateNow;
     @ManyToMany
     @JoinTable(name = "Events_Products",
     joinColumns = @JoinColumn(name = "event_id"),

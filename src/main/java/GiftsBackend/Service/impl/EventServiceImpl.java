@@ -35,7 +35,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 
@@ -78,6 +81,9 @@ public class EventServiceImpl implements EventService {
     public Event addEvent(EventDto eventDto) {
         System.out.println("inside image");
         Optional<User> user = userRepository.findByEmail(eventDto.getUserEmail());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
 
         var eventToSave = Event.builder()
                 .name(eventDto.getName())
@@ -92,6 +98,7 @@ public class EventServiceImpl implements EventService {
                 .startTime(eventDto.getStartTime())
                 .endTime(eventDto.getEndTime())
                 .color(eventDto.getColor())
+                .createdDateNow(timestamp)
                 .cost(eventDto.getCost())
                 .eventStatus(EventStatus.UNCONFIRMED)
                 .contributedAmount(BigDecimal.ZERO)
@@ -284,9 +291,9 @@ public class EventServiceImpl implements EventService {
 
         if(dateFilterDirection != null){
             if(dateFilterDirection.equals("ASC")) {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("startDate")));
+                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDateNow")));
             }
-            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("startDate")));
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDateNow")));
 
         }
 
