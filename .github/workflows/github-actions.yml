@@ -156,12 +156,12 @@ jobs:
           mvn clean
           mvn -B test --file pom.xml
 
-      - name: Deploy to digital ocean
-        uses: appleboy/ssh-action@v1.0.2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USERNAME}}
-          key: ${{secrets.KEY}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
           script: |
             cd GiftApp
             git pull

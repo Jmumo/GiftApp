@@ -42,7 +42,6 @@ public class DarajaApiImpl implements DarajaApi {
 
     @Override
     public AccessTokenResponse getAccessToken() {
-        // get the Base64 rep of consumerKey + ":" + consumerSecret
         String encodedCredentials = HelperUtility.toBase64String(String.format("%s:%s", mpesaConfiguration.getConsumerKey(),
                 mpesaConfiguration.getConsumerSecret()));
         System.out.println("preparing request");
@@ -57,7 +56,6 @@ public class DarajaApiImpl implements DarajaApi {
             Response response = okHttpClient.newCall(request).execute();
             assert response.body() != null;
 
-            // use Jackson to Decode the ResponseBody ...
             return objectMapper.readValue(response.body().string(), AccessTokenResponse.class);
         } catch (IOException e) {
             log.error(String.format("Could not get access token. -> %s", e.getLocalizedMessage()));
@@ -92,7 +90,6 @@ public class DarajaApiImpl implements DarajaApi {
 
             Response response = okHttpClient.newCall(request).execute();
             assert response.body() != null;
-            // use Jackson to Decode the ResponseBody ...
 
             System.out.println();
             return objectMapper.readValue(response.body().string(), RegisterUrlResponse.class);
@@ -138,7 +135,6 @@ public class DarajaApiImpl implements DarajaApi {
         if(event.isPresent()){
             Event eventToSave = event.get();
 
-//save Paybill Response
             MpesaPayBillResponse mpesaPayBillResponse = MpesaPayBillResponse.builder()
                     .billRefNumber(mpesaValidationResponse.getBillRefNumber())
                     .businessShortCode(mpesaValidationResponse.getBusinessShortCode())
@@ -254,7 +250,6 @@ public class DarajaApiImpl implements DarajaApi {
        eventRepository.save(event);
        paymentsRepository.save(payments);
    }else {
-       System.out.println("hello");
        System.out.println(stkPushAsyncResponse.getBody().getStkCallback().getResultDesc());
    }
 

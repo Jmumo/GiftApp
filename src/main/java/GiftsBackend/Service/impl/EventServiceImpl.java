@@ -14,11 +14,13 @@ import GiftsBackend.Utils.SearchSpecifications;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jpa.QueryHints;
@@ -57,11 +59,10 @@ public class EventServiceImpl implements EventService {
     public List<Event> getUserEvents() {
 
         Optional<User> user = Optional.ofNullable(getCurrentLoggedInUserEmail());
-//        System.out.println("getting the user");
+
 
         if(user.isPresent()){
             List<Event> userEvents = eventRepository.findByUserId(user.get().getId());
-//            System.out.println("getting the user events");
 
             if(userEvents.isEmpty()){
                 return new ArrayList<>();
@@ -77,9 +78,6 @@ public class EventServiceImpl implements EventService {
     public Event addEvent(EventDto eventDto) {
         System.out.println("inside image");
         Optional<User> user = userRepository.findByEmail(eventDto.getUserEmail());
-
-        System.out.println("inside image2");
-
 
         var eventToSave = Event.builder()
                 .name(eventDto.getName())
@@ -118,7 +116,6 @@ public class EventServiceImpl implements EventService {
       EventCategory eventCategory = new EventCategory();
       eventCategory.setName(name);
       eventCategory.setImageUrl(imageUrl);
-
         return eventCategoryRepository.save(eventCategory);
     }
 
@@ -129,11 +126,8 @@ public class EventServiceImpl implements EventService {
         Optional<Event> event = eventRepository.findById(productEventDto.getEventId());
 
         if (product.isPresent() && event.isPresent()) {
-            Product UpdatedProduct = product.get();
-
+          //  Product UpdatedProduct = product.get();
             Event UpdatedEvent = event.get();
-
-//            UpdatedEvent.getProduct().add(UpdatedProduct);
 
             return eventRepository.save(UpdatedEvent);
         }
@@ -173,8 +167,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public Event getEvent(Long id) {
-        return eventRepository.findById(id).get();
+        Optional<Event> eventOptional = Optional.of(eventRepository.findById(id).get());
+
+        log.info("fetched user event {}", eventOptional.get());
+        return eventOptional.get();
     }
 
     @Override
@@ -314,21 +312,3 @@ public class EventServiceImpl implements EventService {
 
 }
 
-
-
-
-
-
-//List<Product> products = entityManager.createQuery(criteriaQuery)
-//        .setFirstResult((int) pageable.getOffset())
-//        .setMaxResults(pageable.getPageSize())
-//        .getResultList();
-//
-//// Count the total number of records without pagination
-//CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-//        countQuery.select(criteriaBuilder.count(countQuery.from(Product.class)));
-//Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
-//
-//// Return a page containing the results and total count
-//        return new PageImpl<>(products, pageable, totalCount);
-//        }

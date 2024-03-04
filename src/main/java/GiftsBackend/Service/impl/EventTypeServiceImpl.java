@@ -46,6 +46,5 @@ public class EventTypeServiceImpl implements EventTypeService {
     @Override
     public List<EventType> findGetEvents() {
         return evetypeRepository.findAll();
-
     }
 }
