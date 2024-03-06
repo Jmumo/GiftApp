@@ -102,7 +102,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new UsernameNotFoundException("User Not Found for Authentication"));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        revokeAllUserToken(user);
+       // revokeAllUserToken(user);
         savedUserToken(user,jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -152,7 +152,7 @@ public class AuthenticationService {
 
             if (jwtService.isValid(refreshToken, user)) {
                 var token = jwtService.generateToken(user);
-                revokeAllUserToken(user);
+               // revokeAllUserToken(user);
                 savedUserToken(user, token);
                 var authResponse = AuthenticationResponse.builder()
                         .token(token)
