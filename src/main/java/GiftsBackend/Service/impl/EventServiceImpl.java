@@ -289,15 +289,16 @@ public class EventServiceImpl implements EventService {
             predicates.add(criteriaBuilder.equal(root.get("color"),color));
         }
 
-        if(dateFilterDirection != null){
-            if(dateFilterDirection.equals("ASC")) {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDateNow")));
-            }
-            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDateNow")));
 
-        }
+       if (dateFilterDirection != null) {
+           if (dateFilterDirection.equals("ASC")) {
+               criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDateNow")));
+           } else {
+               criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDateNow")));
+           }
+       }
 
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+       criteriaQuery.where(predicates.toArray(new Predicate[0]));
 
 
         TypedQuery<Event> typedQuery = entityManager.createQuery(criteriaQuery);
