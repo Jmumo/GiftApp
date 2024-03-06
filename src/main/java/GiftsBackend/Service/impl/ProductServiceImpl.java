@@ -181,19 +181,19 @@ public class ProductServiceImpl implements ProductService {
 
        }
 
-        if(priceDirection != null){
-            if(priceDirection.equals("HIGHEST")){
-                criteriaQuery.orderBy((criteriaBuilder.asc(root.get("Price"))));
-            }
-            criteriaQuery.orderBy((criteriaBuilder.desc(root.get("Price"))));
+//       if(dateFilterDirection != null){
+//           if(dateFilterDirection.equals("ASC")) {
+//               criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDate")));
+//           }
+//           criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+//
+//       }
 
-        }
-
-       if(dateFilterDirection != null){
-           if(dateFilterDirection.equals("ASC")) {
-               criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDate")));
+       if(priceDirection != null){
+           if(priceDirection.equals("HIGHEST")){
+               criteriaQuery.orderBy((criteriaBuilder.asc(root.get("Price"))));
            }
-           criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+           criteriaQuery.orderBy((criteriaBuilder.desc(root.get("Price"))));
 
        }
 
