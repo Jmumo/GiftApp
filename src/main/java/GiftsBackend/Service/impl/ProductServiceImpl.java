@@ -191,9 +191,9 @@ public class ProductServiceImpl implements ProductService {
 
        if(priceDirection != null){
            if(priceDirection.equals("HIGHEST")){
-               criteriaQuery.orderBy((criteriaBuilder.asc(root.get("Price"))));
-           }else {
                criteriaQuery.orderBy((criteriaBuilder.desc(root.get("Price"))));
+           }else {
+               criteriaQuery.orderBy((criteriaBuilder.asc(root.get("Price"))));
            }
 
 
