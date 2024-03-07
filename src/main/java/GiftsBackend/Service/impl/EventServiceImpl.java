@@ -2,19 +2,17 @@ package GiftsBackend.Service.impl;
 
 import GiftsBackend.Dtos.*;
 import GiftsBackend.Execptions.InvalidTokenException;
-import GiftsBackend.Execptions.UserNotFoundException;
 import GiftsBackend.Model.*;
 import GiftsBackend.Repository.EventCategoryRepository;
 import GiftsBackend.Repository.EventRepository;
 import GiftsBackend.Repository.ProductRepository;
 import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.EventService;
+import GiftsBackend.Service.ProfileService;
 import GiftsBackend.Utils.HelperUtility;
-import GiftsBackend.Utils.SearchSpecifications;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -25,17 +23,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -52,10 +45,14 @@ public class EventServiceImpl implements EventService {
     private final EventCategoryRepository eventCategoryRepository;
     private final Cloudinary cloudinary;
     private final ProductRepository productRepository;
-    private final SearchSpecifications<Event> filterSpecifications;
 
     private final EntityManager entityManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+
+    private final ProfileService profileService;
+
+    private final HelperUtility helperUtility;
 
 
     @Override
@@ -79,8 +76,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event addEvent(EventDto eventDto) {
-        System.out.println("inside image");
-        Optional<User> user = userRepository.findByEmail(eventDto.getUserEmail());
+
+        Optional<User> user = Optional.ofNullable(helperUtility.getCurrentUser());
         LocalDateTime localDateTime = LocalDateTime.now();
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
@@ -252,7 +249,7 @@ public class EventServiceImpl implements EventService {
 
 
 
-    public User getCurrentLoggedInUserEmail(){
+    private User getCurrentLoggedInUserEmail(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if(email.isEmpty()){

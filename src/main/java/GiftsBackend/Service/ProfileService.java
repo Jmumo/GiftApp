@@ -2,12 +2,14 @@ package GiftsBackend.Service;
 
 
 import GiftsBackend.Dtos.*;
+import GiftsBackend.Execptions.UserNotFoundException;
 import GiftsBackend.Model.User;
 import GiftsBackend.Model.UserProfile;
 import GiftsBackend.Repository.ProfileRepository;
 import GiftsBackend.Repository.UserRepository;
 import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,5 +113,15 @@ public class ProfileService {
         user.getUserProfile().setElias(userBioDto.getElias());
         user.getUserProfile().setAbout(userBioDto.getAbout());
         return userRepository.save(user);
+    }
+
+
+
+    public User getCurrentUser() throws UserNotFoundException {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user.isPresent()){
+            return user.get();
+        }
+        throw new UserNotFoundException(user.get().getEmail());
     }
 }

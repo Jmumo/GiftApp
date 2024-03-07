@@ -3,13 +3,13 @@ package GiftsBackend.Service.impl;
 import GiftsBackend.Dtos.ProductDto;
 import GiftsBackend.Dtos.ProductsSearchResposnse;
 import GiftsBackend.Execptions.UserNotFoundException;
-import GiftsBackend.Model.Event;
 import GiftsBackend.Model.Product;
 import GiftsBackend.Model.User;
 import GiftsBackend.Repository.ProductRepository;
 import GiftsBackend.Repository.UserRepository;
 import GiftsBackend.Service.ProductService;
-import GiftsBackend.Utils.SearchSpecifications;
+import GiftsBackend.Service.ProfileService;
+import GiftsBackend.Utils.HelperUtility;
 import com.cloudinary.Cloudinary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
@@ -21,19 +21,15 @@ import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.jpa.QueryHints;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -43,7 +39,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-    private final SearchSpecifications<Product> filterSpecifications;
+
+    private final ProfileService profileService;
+
+    private final HelperUtility helperUtility;
+
+
+
 
     private final EntityManager entityManager;
 
@@ -86,8 +88,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Set<Product> fetchUserWishList() {
 
-        if(getCurrentUser().isEnabled()){
-            return  getCurrentUser().getWishlist();
+        if(profileService.getCurrentUser().isEnabled()){
+            return  profileService.getCurrentUser().getWishlist();
         }
         return new HashSet<>();
     }
@@ -96,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Set<Product> addToUserWishList(Long productId) {
 
-        User user = getCurrentUser();
+        User user = helperUtility.getCurrentUser();
         Optional<Product> product = productRepository.findById(productId);
 
 
@@ -138,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Set<Product> removeToUserWishList(Long productId) {
-        User user = getCurrentUser();
+        User user = helperUtility.getCurrentUser();
         Optional<Product> product = productRepository.findById(productId);
 
 
@@ -151,13 +153,7 @@ public class ProductServiceImpl implements ProductService {
         return new HashSet<>();
     }
 
-    private User getCurrentUser() throws UserNotFoundException {
-        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(user.isPresent()){
-            return user.get();
-        }
-        throw new UserNotFoundException(user.get().getEmail());
-    }
+
 
 
 
@@ -181,13 +177,15 @@ public class ProductServiceImpl implements ProductService {
 
        }
 
-//       if(dateFilterDirection != null){
-//           if(dateFilterDirection.equals("ASC")) {
-//               criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDate")));
-//           }
-//           criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
-//
-//       }
+       if(dateFilterDirection != null){
+           if(dateFilterDirection.equals("ASC")) {
+               criteriaQuery.orderBy(criteriaBuilder.asc(root.get("createdDate")));
+           }else{
+               criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+           }
+
+
+       }
 
        if(priceDirection != null){
            if(priceDirection.equals("HIGHEST")){

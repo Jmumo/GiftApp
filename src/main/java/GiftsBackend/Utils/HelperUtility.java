@@ -1,19 +1,33 @@
 package GiftsBackend.Utils;
 
+import GiftsBackend.Execptions.UserNotFoundException;
+import GiftsBackend.Model.User;
+import GiftsBackend.Repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 
-
+@Service
 public class HelperUtility {
+
+
+    private final UserRepository userRepository;
+
+    public HelperUtility(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public static String toBase64String(String value) {
         // Convert the input string to bytes
@@ -58,6 +72,21 @@ public class HelperUtility {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return dateFormat.format(new Date());
     }
+
+
+    public User getCurrentUser() throws UserNotFoundException {
+        Optional<User> user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user.isPresent()){
+            return user.get();
+        }
+        throw new UserNotFoundException(user.get().getEmail());
+    }
+
+
+
+
+
+
 
 
 }
