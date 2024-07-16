@@ -167,8 +167,8 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-ip << 'EOF'
-            cd /path/to/GiftApp
+          ssh -o StrictHostKeyChecking=no ubuntu@13.247.110.135 << 'EOF'
+            cd GiftApp
             git pull
             sh stop.sh
 
