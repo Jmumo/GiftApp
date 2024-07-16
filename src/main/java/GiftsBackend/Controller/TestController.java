@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
      @GetMapping
     public ResponseEntity<String> sayHello(){
-        return ResponseEntity.ok("this is test secured endpoint with github actions aws");
+        return ResponseEntity.ok("this is test secured endpoint with github actions aws and cli and update key");
     }
 
 }
