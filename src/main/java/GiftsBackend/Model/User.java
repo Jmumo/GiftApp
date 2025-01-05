@@ -24,7 +24,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "AppUsers")
-public class User implements UserDetails {
+public class User
+        implements UserDetails
+{
     @Id
     @GeneratedValue
     private Long id;
